@@ -10,13 +10,13 @@ var generator = function(){
 
   generator.init = function(peopleCount, elevatorCount, levelCount){
     return {
-      people: generatePeople(peopleCount),
+      people: generatePeople(peopleCount, levelCount),
       elevators: generateElevators(elevatorCount),
       levels: generateLevels(levelCount)
     }
   }
 
-  function generatePeople(count){
+  function generatePeople(count, levelCount){
     let people = []
     var startTimeDistribution = gaussian(540, 60)
     var stopTimeDistribution = gaussian(780, 60)
@@ -50,20 +50,23 @@ var generator = function(){
         // Between 8 and 10 hours after start
         person.workStopTime = person.workStartTime + startTimeDistribution()
       }
+      person.workLevel = rand(1, levelCount, true)
       people.push(person)
     }
     return people
   }
 
-  function rand(minMin, maxMin) {
-    minMin = minMin * 60 * 1000
-    maxMin = maxMin * 60 * 1000
+  function rand(minMin, maxMin, keepOriginalValues) {
+    if(!keepOriginalValues){
+      minMin = minMin * 60 * 1000
+      maxMin = maxMin * 60 * 1000
+    }
 
     return Math.floor(Math.random() * (maxMin - minMin + 1)) + minMin;
   }
 
   function generateLevels(count){
-    let level = []
+    let level = {}
 
     for(var i=0; i<count; i++){
       let currentLevel = {
@@ -101,7 +104,7 @@ var generator = function(){
         })
       }
 
-      level.push(currentLevel)
+      level[i] = currentLevel
     }
 
     return level
