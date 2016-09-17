@@ -95,7 +95,15 @@ var looper = function(){
               break;
             }
 
-            var person = looper.state.people[personIndex];
+            var personId = level.people[personIndex];
+            var person = looper.state.people[personId];
+
+            if (!person.isWaitingForElevator) {
+              continue;
+            }
+
+            person.isInElevator = true;
+            person.isWaitingForElevator = false;
 
             // add person and person's target level to elevator
             elevator.addPerson(person);
@@ -116,6 +124,7 @@ var looper = function(){
 
             // update the current level
             person.currentLevel = level.id;
+            person.isInElevator = false;
 
             // remove person from elevator
             elevator.removePerson(person);

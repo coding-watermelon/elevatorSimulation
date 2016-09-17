@@ -253,7 +253,6 @@ var renderer = function(){
       var levelName = getLevelName(index);
       ctx.fillText(levelName, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
 
-
       ctx.setLineDash([]);
 
       // people

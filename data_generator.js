@@ -84,10 +84,12 @@ var generator = function(){
 
       person.requestElevatorUp = function() {
         looper.state.levels[person.currentLevel].requestElevatorUp();
+        person.isWaitingForElevator = true;
       }
 
       person.requestElevatorDown = function() {
         looper.state.levels[person.currentLevel].requestElevatorDown();
+        person.isWaitingForElevator = true;
       }
 
       people.push(person)
@@ -107,34 +109,34 @@ var generator = function(){
       }
 
       currentLevel.requestElevatorUp = function(){
-        if(!this.elevatorUpRequested){
-          this.elevatorUpRequested = true
-          looper.logic.onElevatorUpRequested(this)
+        if(!currentLevel.elevatorUpRequested){
+          currentLevel.elevatorUpRequested = true
+          looper.logic.onElevatorUpRequested(currentLevel)
         }
       }
 
       currentLevel.requestElevatorDown = function(){
-        if(!this.elevatorDownRequested){
-          this.elevatorDownRequested = true
-          looper.logic.onElevatorDownRequested(this)
+        if(!currentLevel.elevatorDownRequested){
+          currentLevel.elevatorDownRequested = true
+          looper.logic.onElevatorDownRequested(currentLevel)
         }
       }
 
       currentLevel.resetUp = function(){
-        this.elevatorUpRequested = false
+        currentLevel.elevatorUpRequested = false
       }
 
       currentLevel.resetDown = function(){
-        this.elevatorDownRequested = false
+        currentLevel.elevatorDownRequested = false
       }
 
       currentLevel.addPerson = function(person){
-        if(this.people.indexOf(person.id) == -1) {
-          this.people.push(person.id)
+        if(currentLevel.people.indexOf(person.id) == -1) {
+          currentLevel.people.push(person.id)
         }
       }
       currentLevel.removePerson = function(person){
-        this.people = removeElementFromArray(person.id, this.people);
+        currentLevel.people = removeElementFromArray(person.id, currentLevel.people);
       }
 
       levels.push(currentLevel);
@@ -159,15 +161,15 @@ var generator = function(){
       }
 
       elevator.canAddPerson = function() {
-        return this.people.length + 1 <= elevator.maximumNumberOfPeople
+        return elevator.people.length + 1 <= elevator.maximumNumberOfPeople
       }
 
       elevator.addPerson = function(person){
         if (!elevator.canAddPerson()) {
           return false;
         }
-        if(this.people.indexOf(person.id) == -1) {
-          this.people.push(person.id)
+        if(elevator.people.indexOf(person.id) == -1) {
+          elevator.people.push(person.id)
           person.isInElevator = true;
           return true;
         }
@@ -175,18 +177,17 @@ var generator = function(){
       }
 
       elevator.removePerson = function(person){
-        this.people = removeElementFromArray(person.id, this.people);
-        person.isInElevator = false;
+        elevator.people = removeElementFromArray(person.id, elevator.people);
       }
 
       elevator.addTargetLevel = function(levelIndex){
-        if(this.targetLevels.indexOf(levelIndex) == -1) {
-          this.targetLevels.push(levelIndex)
+        if(elevator.targetLevels.indexOf(levelIndex) == -1) {
+          elevator.targetLevels.push(levelIndex)
         }
       }
 
       elevator.removeTargetLevel = function(level){
-        this.targetLevels = removeElementFromArray(level, this.targetLevels);
+        elevator.targetLevels = removeElementFromArray(level, elevator.targetLevels);
       }
 
       elevator.move = function() {
@@ -217,7 +218,7 @@ var generator = function(){
       }
 
       elevator.moveUp = function(){
-        this.currentLevel += this.speed * looper.loopTimeStampDelta;
+        elevator.currentLevel += elevator.speed * looper.loopTimeStampDelta;
       }
 
       elevator.shouldMoveDown = function() {
@@ -228,8 +229,8 @@ var generator = function(){
       }
 
       elevator.moveDown = function(){
-        this.currentLevel -= this.speed * looper.loopTimeStampDelta;
-        Math.max(this.currentLevel, 0);
+        elevator.currentLevel -= elevator.speed * looper.loopTimeStampDelta;
+        Math.max(elevator.currentLevel, 0);
       }
 
       elevator.isAtLevel = function() {
