@@ -104,7 +104,6 @@ var looper = function(){
             // remove person from level
             level.removePerson(person);
             console.log("Person " + person.id + " entered elevator " + elevator.id + " on level " + level.id + ", target: " + person.getTargetLevel());
-            console.log("People remaining at level " + level.id + ": " + level.people.length);
           }
 
           // let people exit the elevator
@@ -120,11 +119,11 @@ var looper = function(){
 
             // remove person from elevator
             elevator.removePerson(person);
+            personIndex--;
 
             // add person to level
             level.addPerson(person);
             console.log("Person " + person.id + " exited elevator " + elevator.id + " on level " + level.id);
-            console.log("People remaining in elevator " + elevator.id + ": " + elevator.people.length);
           }
         }
       }
