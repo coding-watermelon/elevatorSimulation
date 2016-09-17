@@ -5,6 +5,7 @@ var renderer = function(){
 
   renderer.frameRate = 30;
   renderer.renderingInterval;
+  renderer.renderingTimeout;
 
   renderer.lastRenderingTimestamp = 0;
   renderer.lastRenderedState;
@@ -19,13 +20,15 @@ var renderer = function(){
   }
 
   renderer.startRenderingStates = function() {
+    console.log("Starting state rendering");
     renderer.renderingInterval = renderer.getRenderingInterval();
 
-
+    renderer.renderingTimeout = window.setTimeout(renderLatestState, renderer.renderingInterval);
   }
 
   renderer.stopRenderingStates = function() {
-    
+    console.log("Stopping state rendering");
+    window.clearTimeout(renderer.renderingTimeout);
   }
 
   renderer.setLatestState = function(state) {
@@ -37,7 +40,7 @@ var renderer = function(){
     if (renderer.lastRenderedState == renderer.latestState) {
       return false;
     }
-    
+
     // check if we are in the rendering interval
     var now = Date.now();
     if (now < renderer.lastRenderingTimestamp + renderer.renderingInterval) {
@@ -47,8 +50,10 @@ var renderer = function(){
     return true;
   }
 
-  renderer.renderState = function(state) {
-  	renderer.renderStateOnCanvas(state, renderer.canvas);
+  renderer.renderLatestState = function() {
+    if (renderer.shouldRenderState(renderer.latestState)) {
+      renderer.renderStateOnCanvas(renderer.latestState, renderer.canvas);
+    }
   }
 
   renderer.renderStateOnCanvas = function(state, canvas) {
