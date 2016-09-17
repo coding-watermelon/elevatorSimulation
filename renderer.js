@@ -14,7 +14,7 @@ var renderer = function(){
   renderer.primaryColor = "#388E3C";
   renderer.primaryColorLight = "#43A047";
   renderer.primaryColorDark = "#2E7D32";
-  renderer.secondaryColor = "#FBC02D";
+  renderer.secondaryColor = "#689F38";
 
   renderer.elevatorColor = "#FFFFFF";
   renderer.levelColor = "#FFFFFF";
@@ -180,7 +180,11 @@ var renderer = function(){
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.arc(holderStartX + holderWidth / 2, holderStartY + holderHeight, holderWidth, 1 * Math.PI, 2 * Math.PI);
-      ctx.fillStyle = renderer.primaryColorDark;
+      if (elevator.people.length > 0) {
+        ctx.fillStyle = renderer.secondaryColor;
+      } else {
+        ctx.fillStyle = renderer.primaryColorDark;
+      }
       ctx.fill();
       ctx.stroke();
 
@@ -193,6 +197,7 @@ var renderer = function(){
       // elevator box
       ctx.strokeStyle = renderer.elevatorColor;
       ctx.lineWidth = 1.5;
+      ctx.fillStyle = renderer.primaryColorDark;
       ctx.fillRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
       ctx.strokeRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
 
@@ -296,12 +301,13 @@ var renderer = function(){
       // counts
       ctx.fillStyle = renderer.whiteOverlay;
       ctx.font = "lighter 40px Arial";
-      var waitingCountWidth = ctx.measureText(waitingCount).width;
-      ctx.fillText(waitingCount, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 10);
+      var score = "?";
+      var scoreWidth = ctx.measureText(score).width;
+      ctx.fillText(score, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 10);
 
       ctx.font = "lighter 14px Arial";
-      ctx.fillText("people waiting", levelStartX + 15 + waitingCountWidth, levelStartY + (options.levelHeight / 2) - 9);
-      ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 15 + waitingCountWidth, levelStartY + (options.levelHeight / 2) + 9);
+      ctx.fillText(waitingCount + " waiting", levelStartX + 15 + scoreWidth, levelStartY + (options.levelHeight / 2) - 9);
+      ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 15 + scoreWidth, levelStartY + (options.levelHeight / 2) + 9);
     }
   }
 

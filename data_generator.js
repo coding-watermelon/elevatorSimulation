@@ -159,7 +159,6 @@ var generator = function(){
         currentLevel: 0,
         targetLevels: [],
         speed: ELEVATOR_SPEED,
-        movingUp: false,
         waitTimeout: 0
       }
 
