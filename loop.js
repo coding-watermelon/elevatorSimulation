@@ -10,6 +10,7 @@
 // 	Check wait timeout (reduce or change current level)
 // 	Fire event if reached a target level
 // 		Let people enter / exit elevator 
+
 let EXIT = false
 let LOOP_DURATION = 10 // Milliseconds one loop iteration represents
 let ELEVATOR_TIMEOUT = 2000 // Timeout of elevator in Milliseconds
@@ -95,9 +96,21 @@ function startLoop(){
       }else if(elevator.direction == 'down' && elevator.currentLevel < nextLevel){
         elevator.currentLevel = nextLevel
         elevator.waitTimeout = ELEVATOR_TIMEOUT
+        exchangePersons(elevator)
       }
 
     }
+  }
+
+  // Exchange Persons between elevator and his current Level
+  // TODO: Person needs to know where he has to leave the elevator -> save it somewhere
+  function exchangePersons(elevator){
+    // for(var idIndex in elevator.people){
+    //   var person = state.people.filter(function(person){
+    //                     return person.id == elevator.people[idIndex]})[0]
+    //   if(person.)
+
+    // }
   }
 
 }
