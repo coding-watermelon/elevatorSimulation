@@ -27,7 +27,7 @@ var smartLogic = function(){
             nearestElevatorIndex = i
         }
     }
-    console.log('Nearest elevator for level ' + level + ' is elevator ' + nearestElevatorIndex)
+    //console.log('Nearest elevator for level ' + level + ' is elevator ' + nearestElevatorIndex)
     return nearestElevatorIndex
   }
   

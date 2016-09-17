@@ -47,7 +47,7 @@ var looper = function(){
       if(person.isWaitingForElevator) {
         person.waitingTime += looper.loopTimeStampDelta
         looper.waitingTimeSum += looper.loopTimeStampDelta
-        console.log(looper.waitingTimeSum)
+        //console.log(looper.waitingTimeSum)
       }
 
       if (person.isInElevator) {
@@ -67,7 +67,7 @@ var looper = function(){
 
       // check if person needs to have a break
       if (person.shouldHaveABreak() && !person.isAtBreakLevel()) {
-        console.log("Person wants to have a break");
+        //console.log("Person wants to have a break");
         if (person.currentLevel > person.breakLevel) {
           person.requestElevatorDown();
         } else if (person.currentLevel < person.breakLevel) {
