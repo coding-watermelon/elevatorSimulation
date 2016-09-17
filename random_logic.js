@@ -3,15 +3,19 @@ var random_logic = function(){
   var logic = {
   };
 
-  logic.onElevatorRequested = function(currentState, isUpRequested) {
+  logic.onElevatorIsUpRequested = function(currentState, currentLevel) {
     //send random unused elevator
   }
 
-  logic.onTargetLevelsRequested = function(currentState, targetLevels) {
+  logic.onElevatorIsDownRequested = function(currentState, currentLevel) {
+    //send random unused elevator
+  }
+
+  logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {
     //go to random level
   }
 
-  logic.onTargetLevelsReached = function(currentState) {
+  logic.onElevatorGotIdle = function(currentState) {
   //wait random seconds
   //go on random level
   }
