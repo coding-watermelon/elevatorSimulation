@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 function initialize() {
   console.log("Initializing");
-  
+
   var canvas = document.getElementById("canvas");
   renderer.initializeCanvas(canvas);
-  
 }
