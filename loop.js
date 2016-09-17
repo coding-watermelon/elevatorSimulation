@@ -36,6 +36,13 @@ var looper = function(){
     looper.processPeople();
     looper.processElevators();
     looper.currentTimeStamp += looper.loopTimeStampDelta;
+    
+    // reset timestamp
+    var day = 24 * 60 * 60 * 1000;
+    if (looper.currentTimeStam > day) {
+      looper.currentTimeStamp = 0 + (looper.currentTimeStam - day);
+    }
+
     looper.state.timestamp = looper.currentTimeStamp;
     renderer.setLatestState(looper.state);
   }

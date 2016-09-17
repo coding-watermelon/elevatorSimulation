@@ -218,7 +218,7 @@ var renderer = function(){
         var peopleStartX = elevatorStartX + options.elevatorPadding + offsetX;
         var peopleStartY = elevatorEndY - options.elevatorMargin - options.elevatorPadding - offsetY;
 
-        ctx.fillStyle = renderer.primaryColorLight;
+        ctx.fillStyle = renderer.secondaryColor;
         ctx.fillRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
         ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
       }
@@ -277,7 +277,7 @@ var renderer = function(){
         var person = state.people[level.people[peopleIndex]];
         if (person.isWaitingForElevator) {
           waitingCount++;
-          ctx.fillStyle = renderer.primaryColorLight;
+          ctx.fillStyle = renderer.secondaryColor;
         } else {
           ctx.fillStyle = renderer.primaryColorDark;
         }

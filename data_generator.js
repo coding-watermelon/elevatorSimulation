@@ -33,12 +33,12 @@ var generator = function(){
       let person = {}
       person.id = i
 
-      var generateOutlier = Math.random() < 0.05;
+      var generateOutlier = Math.random() < 0.1;
       if (generateOutlier) {
-        person.workStartTime = gaussian(getMillisecondsFromTime(5), getMillisecondsFromTime(3))
-        person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))
-        person.breakStopTime = person.breakStartTime + gaussian(getMillisecondsFromTime(0.5), getMillisecondsFromTime(0.45));
-        person.workStopTime = person.breakStopTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3));
+        person.workStartTime = gaussian(getMillisecondsFromTime(5), getMillisecondsFromTime(3))()
+        person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))()
+        person.breakStopTime = person.breakStartTime + gaussian(getMillisecondsFromTime(0.5), getMillisecondsFromTime(0.45))()
+        person.workStopTime = person.breakStopTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))()
       } else {
         person.workStartTime = startTimeDistribution()
         person.breakStartTime = breakTimeDistribution()
