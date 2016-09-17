@@ -11,9 +11,11 @@ function initialize() {
   var initialState = generateInitialState();
   console.log(initialState);
 
+  smartLogic.initialize(initialState);
   var logic = smartLogic;
 
   looper.initialize(initialState, logic);
+
   looper.startLooping();
   renderer.startRenderingStates();
 }

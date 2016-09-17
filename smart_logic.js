@@ -1,30 +1,33 @@
 var smartLogic = function(){
 
+  var BATCH_COUNT = 60 * 60 * 24;
+
   var logic = {
   };
 
-  model = {}
-  //Map every second on most frequent level
-  for(var t = 0; t < 86400; t++) {
-    model[t] = {}
-      for(var levelIndex = 0; levelIndex < looper.state.levels.length; levelIndex++) {
-        model[t][levelIndex] = 0
-      }
-  }
-  logic.model = model
+  logic.initialize = function(initialState) {
+    // map every second on most frequent level
+    var model = {};
 
+    for(var batchIndex = 0; batchIndex < BATCH_COUNT; batchIndex++) {
+      model[batchIndex] = {};
+      for(var levelIndex = 0; levelIndex < initialState.levels.length; levelIndex++) {
+        model[batchIndex][levelIndex] = 0;
+      }
+    }
+    logic.model = model
+  }
+  
   logic.onElevatorUpRequested = function(level) {
     console.log("onElevatorUpRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level]++
-    console.log(model)
   }
 
   logic.onElevatorDownRequested = function(level) {
     console.log("onElevatorDownRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level]++
-    console.log(model)
   }
 
   logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {
