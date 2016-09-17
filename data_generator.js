@@ -26,8 +26,8 @@ var generator = function(){
 
   function generatePeople(count, levelCount){
     let people = []
-    var startTimeDistribution = gaussian(getMillisecondsFromTime(9), getMillisecondsFromTime(1))
-    var breakTimeDistribution = gaussian(getMillisecondsFromTime(13), getMillisecondsFromTime(1))
+    var startTimeDistribution = gaussian(getMillisecondsFromTime(7.5), getMillisecondsFromTime(0.25))
+    var breakTimeDistribution = gaussian(getMillisecondsFromTime(12), getMillisecondsFromTime(0.25))
 
     for(var i=0; i<count; i++){
       let person = {}
@@ -42,8 +42,8 @@ var generator = function(){
       } else {
         person.workStartTime = startTimeDistribution()
         person.breakStartTime = breakTimeDistribution()
-        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.75)
-        person.workStopTime = person.workStartTime + startTimeDistribution()
+        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.45)
+        person.workStopTime = person.workStartTime + getMillisecondsFromTime(9)
       }
       person.workLevel = getRandomNumberBetween(1, levelCount-1)
       person.breakLevel = 0;
