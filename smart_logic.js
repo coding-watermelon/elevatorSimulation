@@ -19,7 +19,11 @@ var smartLogic = function(){
   }
 
   logic.getLevelScore = function(level) {
-    var currentRequests = logic.model[getSecondsOfTheDay(looper.currentTimeStamp)];
+    var past = getSecondsOfTheDay(looper.currentTimeStamp) - 5
+    if(past < 0) {
+      past = 0
+    }
+    var currentRequests = logic.model[past];
     var requestSum = 0;
     for(var levelIndex = 0; levelIndex < currentRequests.length; levelIndex++) {
       requestSum += currentRequests[levelIndex]
