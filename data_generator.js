@@ -122,6 +122,7 @@ var generator = function(){
         targetLevels: [],
         // seconds used for 1 level
         speed: ELEVATOR_SPEED,
+        direction: 'up', // can be 'up' or 'down'
         waitTimeout: 0
       }
 
