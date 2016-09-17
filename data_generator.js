@@ -191,5 +191,3 @@ var generator = function(){
 
   return generator;
 }()
-
-console.log(generator.init(3,3,3))
