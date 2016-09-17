@@ -68,7 +68,7 @@ var renderer = function(){
     if (force || renderer.shouldRenderState(renderer.latestState)) {
       renderer.renderStateOnCanvas(renderer.latestState, renderer.canvas);
     } else {
-      console.log("Skipping state rendering");
+      //console.log("Skipping state rendering");
     }
   }
 

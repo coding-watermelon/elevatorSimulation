@@ -1,20 +1,26 @@
-var dumb_logic = function(){
+var dumbLogic = function(){
 
   var logic = {
   };
 
-  logic.onElevatorIsUpRequested = function(currentState, currentLevel) {
+  logic.onElevatorUpRequested = function(level) {
     //send closest unused elevator or elevator that will visit the level anyways
+    console.log("onElevatorUpRequested");
   }
 
-  logic.onElevatorIsDownRequested = function(currentState, currentLevel) {
+  logic.onElevatorDownRequested = function(level) {
     //send closest unused elevator or elevator that will visit the level anyways
+    console.log("onElevatorDownRequested");
   }
 
   logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {
     //go to target levels one after another
   }
 
-  logic.onElevatorGotIdle = function(currentState) {
+  logic.onElevatorIdle = function(elevator) {
     //stay on the level
+    //console.log("onElevatorIdle");
   }
+
+  return logic;
+}();

@@ -11,20 +11,20 @@ function initialize() {
   var initialState = generateInitialState();
   console.log(initialState);
 
-  var logic = null; // TODO: get logic here
+  var logic = randomLogic;
 
   looper.initialize(initialState, logic);
   looper.startLooping();
-  //renderer.startRenderingStates();
+  renderer.startRenderingStates();
 }
 
 // generates a state that will be used for
 // initializing the looper
 function generateInitialState() {
-  var peopleCount = getUrlParam("peopleCount", 100);
+  var peopleCount = getUrlParam("peopleCount", 10);
   var elevatorCount = getUrlParam("elevatorCount", 4);
   var levelCount = getUrlParam("levelCount", 6);
-  var initialState = generator.init(peopleCount, elevatorCount, levelCount);  
+  var initialState = generator.initialize(peopleCount, elevatorCount, levelCount);  
   return initialState;
 }
 
@@ -50,6 +50,10 @@ function generateFakeState() {
   }
   
   return initialState;
+}
+
+function getRandomNumberBetween(minMin, maxMin) {
+  return Math.floor(Math.random() * (maxMin - minMin + 1)) + minMin;
 }
 
 function getUrlParam(sParam, defaultValue) {

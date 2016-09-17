@@ -2,56 +2,50 @@
 
 var generator = function(){
   const MAX_NUMBER_OF_PEOPLE = 16;
-  const ELEVATOR_SPEED = 2
+  const WAIT_TIMEOUT = 10 * 1000;
+  const ELEVATOR_SPEED = (1 / 5) / 1000;
   const BREAK_LEVEL = 0
 
   let generator = {}
   let people = []
   
 
-  generator.init = function(peopleCount, elevatorCount, levelCount){
-    return {
+  generator.initialize = function(peopleCount, elevatorCount, levelCount){
+    var state = {
       people: generatePeople(peopleCount, levelCount),
       elevators: generateElevators(elevatorCount),
       levels: generateLevels(levelCount)
     }
+
+    for (var personIndex = 0; personIndex < state.people.length; personIndex++) {
+      state.levels[0].people.addPerson(state.people[personIndex].id);
+    }
+
+    return state;
   }
 
   function generatePeople(count, levelCount){
     let people = []
-    var startTimeDistribution = gaussian(540, 60)
-    var stopTimeDistribution = gaussian(780, 60)
+    var startTimeDistribution = gaussian(getMillisecondsFromTime(9), getMillisecondsFromTime(1))
+    var breakTimeDistribution = gaussian(getMillisecondsFromTime(13), getMillisecondsFromTime(1))
 
     for(var i=0; i<count; i++){
       let person = {}
       person.id = i
 
-      // Time represented as number of minutes after 0 o clock 
-      // is number between 0 and 1440
-      if (Math.random() < 0.05) {
-        //Create an outlier
-        //Between 0 and 11 am
-        person.workStartTime = rand(0, 660)
-
-        //Between 11 am and 3 pm
-        person.breakStartTime = rand(660, 900)
-        // Between 20 and 60 minutes
-        person.breakStopTime = Math.floor(Math.random() * 41) + 20;
-
-        // Between 7 and 11 hours after start
-        person.workStopTime = person.workStartTime + rand(420, 660)
+      var generateOutlier = Math.random() < 0.05;
+      if (generateOutlier) {
+        person.workStartTime = gaussian(getMillisecondsFromTime(5), getMillisecondsFromTime(3))
+        person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))
+        person.breakStopTime = person.breakStartTime + gaussian(getMillisecondsFromTime(0.5), getMillisecondsFromTime(0.45));
+        person.workStopTime = person.breakStopTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3));
       } else {
-        // Between 8 o clock and 10 o clock
         person.workStartTime = startTimeDistribution()
-        
-        // Between 12 am and 2 pm
-        person.breakStartTime = stopTimeDistribution()
-        person.breakStopTime = person.breakStartTime + 45
-
-        // Between 8 and 10 hours after start
+        person.breakStartTime = breakTimeDistribution()
+        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.75)
         person.workStopTime = person.workStartTime + startTimeDistribution()
       }
-      person.workLevel = rand(1, levelCount-1, true)
+      person.workLevel = getRandomNumberBetween(1, levelCount-1)
       person.breakLevel = 0;
       person.currentLevel = 0;
       person.isInElevator = false;
@@ -93,15 +87,6 @@ var generator = function(){
     return people
   }
 
-  function rand(minMin, maxMin, keepOriginalValues) {
-    if(!keepOriginalValues){
-      minMin = minMin * 60 * 1000
-      maxMin = maxMin * 60 * 1000
-    }
-
-    return Math.floor(Math.random() * (maxMin - minMin + 1)) + minMin;
-  }
-
   function generateLevels(count){
     let levels = []
 
@@ -113,32 +98,35 @@ var generator = function(){
         elevatorDownRequested: false
       }
 
-      // functions of level object
       currentLevel.requestElevatorUp = function(){
-        this.elevatorUpRequested = true
         if(!this.elevatorUpRequested){
-          // Call logic
-          logic.requestElevatorUp(this)
+          this.elevatorUpRequested = true
+          looper.logic.onElevatorUpRequested(this)
         }
       }
+
       currentLevel.requestElevatorDown = function(){
         if(!this.elevatorDownRequested){
-          // Call logic
-          logic.requestElevatorDown(this)
+          this.elevatorDownRequested = true
+          looper.logic.onElevatorDownRequested(this)
         }
-        this.elevatorDownRequested = true
       }
-      currentLevel.resetUp = function(){this.elevatorUpRequested = false}
-      currentLevel.resetDown = function(){this.elevatorDownRequested = false}
+
+      currentLevel.resetUp = function(){
+        this.elevatorUpRequested = false
+      }
+
+      currentLevel.resetDown = function(){
+        this.elevatorDownRequested = false
+      }
 
       currentLevel.addPerson = function(person){
-        if(this.people.find(person.id) == -1)
+        if(this.people.find(person.id) == -1) {
           this.people.push(person.id)
+        }
       }
       currentLevel.removePerson = function(person){
-        this.people = this.people.filter(function(people){
-          return people != person.id
-        })
+        this.people = removeElementFromArray(person, this.people);
       }
 
       levels.push(currentLevel);
@@ -157,38 +145,111 @@ var generator = function(){
         people: [],
         currentLevel: 0,
         targetLevels: [],
-        // seconds used for 1 level
         speed: ELEVATOR_SPEED,
-        direction: 'up', // can be 'up' or 'down'
+        movingUp: false,
         waitTimeout: 0
       }
 
-      // functions of elevator Object
-      elevator.addPerson = function(person){
-        if(this.people.find(person.id) == -1)
-          this.people.push(person.id)
-      }
-      elevator.removePerson = function(person){
-        this.people = this.people.filter(function(people){
-          return people != person.id
-        })
-      }
-      elevator.addTargetLevel = function(level){
-        if(this.targetLevels.find(level.id) == -1)
-          this.targetLevels.push(level.id)
-      }
-      elevator.removeTargetLevel = function(level){
-        this.targetLevels = this.targetLevels.filter(function(currentLevel){
-          return currentLevel != level.id
-        })
-      }
-      elevator.moveUp = function(seconds){
-        this.currentLevel += seconds / this.speed
-      }
-      elevator.moveDown = function(seconds){
-        this.currentLevel -= seconds / this.speed
+      elevator.canAddPerson = function() {
+        return this.people.length + 1 < maximumNumberOfPeople
       }
 
+      elevator.addPerson = function(person){
+        if (!elevator.canAddPerson()) {
+          return false;
+        }
+        if(this.people.indexOf(person.id) == -1) {
+          this.people.push(person.id)
+          return true;
+        }
+        return false;
+      }
+
+      elevator.removePerson = function(person){
+        this.people = removeElementFromArray(person, this.people);
+      }
+
+      elevator.addTargetLevel = function(level){
+        if(this.targetLevels.indexOf(level.id) == -1) {
+          this.targetLevels.push(level.id)
+        }
+      }
+
+      elevator.removeTargetLevel = function(level){
+        this.targetLevels = removeElementFromArray(level, this.targetLevels);
+      }
+
+      elevator.move = function() {
+        if (elevator.waitTimeout > 0) {
+          elevator.waitTimeout -= looper.loopTimeStampDelta
+          elevator.waitTimeout = Math.max(0, elevator.waitTimeout);
+          return;
+        }
+
+        if (elevator.shouldMoveUp()) {
+          elevator.moveUp();
+          return;
+        }
+
+        if (elevator.shouldMoveDown()) {
+          elevator.moveDown();
+          return;
+        }
+
+        looper.logic.onElevatorIdle(elevator);
+      }
+
+      elevator.shouldMoveUp = function() {
+        if (elevator.targetLevels.length < 1) {
+          return false;
+        }
+        return elevator.targetLevels[0] > elevator.currentLevel;
+      }
+
+      elevator.moveUp = function(){
+        this.currentLevel += this.speed * looper.loopTimeStampDelta;
+      }
+
+      elevator.shouldMoveDown = function() {
+        if (elevator.targetLevels.length < 1) {
+          return false;
+        }
+        return elevator.targetLevels[0] < elevator.currentLevel;
+      }
+
+      elevator.moveDown = function(){
+        this.currentLevel -= this.speed * looper.loopTimeStampDelta;
+        Math.max(this.currentLevel, 0);
+      }
+
+      elevator.isAtLevel = function() {
+        return elevator.currentLevel % 1 == 0;
+      }
+
+      elevator.getLevel = function() {
+        return looper.state.levels[elevator.currentLevel];
+      }
+
+      elevator.shouldStop = function() {
+        return elevator.shouldStopAtLevel(elevator.currentLevel);
+      }
+
+      elevator.shouldStopAtLevel = function(level) {
+        if (elevator.targetLevels.length < 1) {
+          // has no target levels
+          return false;
+        } else if (elevator.waitTimeout > 0) {
+          // elevator already stopped
+          return false;
+        } else {
+          return elevator.targetLevels[0] == level;
+        }
+      }
+
+      elevator.stop = function() {
+        elevator.waitTimeout = WAIT_TIMEOUT;
+        looper.logic.onElevatorStopped(elevator);
+      }
 
       elevators.push(elevator)
     }
@@ -196,12 +257,22 @@ var generator = function(){
     return elevators
   }
 
+  function removeElementFromArray(element, array) {
+    var index = array.indexOf(element);
+    if (index != -1) {
+      array.splice(index, 1);
+    }
+    return array;
+  }
 
-  // returns a gaussian random function with the given mean and standard deviation
-  function gaussian(mean, stdev) {
-      mean = mean * 60 * 1000;
-      stdev = stdev * 60 * 1000;
-      
+
+  function getMillisecondsFromTime(hour) {
+    return hour * 60 * 60 * 1000;
+  }
+
+  // returns a gaussian random function with the given 
+  // mean and standard deviation
+  function gaussian(mean, stdev) {      
       var y2;
       var use_last = false;
       return function() {
