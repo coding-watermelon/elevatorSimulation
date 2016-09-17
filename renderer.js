@@ -3,7 +3,7 @@ var renderer = function(){
   var renderer = {
   };
 
-  renderer.frameRate = 10;
+  renderer.frameRate = 60;
   renderer.renderingInterval;
   renderer.renderingIntervalObject;
 
@@ -52,7 +52,7 @@ var renderer = function(){
   renderer.shouldRenderState = function(state) {
     // check if we have an updated state
     if (renderer.lastRenderedState == state) {
-      return false;
+      //return false;
     }
 
     // check if we are in the rendering interval
@@ -73,7 +73,8 @@ var renderer = function(){
   }
 
   renderer.renderStateOnCanvas = function(state, canvas) {
-    console.log("Rendering state");
+    //console.log("Rendering state:");
+    //console.log(state);
 
     try {
       var ctx = canvas.getContext("2d");

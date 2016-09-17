@@ -31,7 +31,7 @@ var randomLogic = function(){
   }
 
   logic.onElevatorStopped = function(elevator) {
-    console.log("onElevatorStopped");
+    //console.log("onElevatorStopped");
   }
 
   return logic;

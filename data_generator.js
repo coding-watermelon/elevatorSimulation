@@ -1,9 +1,9 @@
 'use strict'
 
 var generator = function(){
-  const MAX_NUMBER_OF_PEOPLE = 16;
+  const MAX_NUMBER_OF_PEOPLE = 9;
   const WAIT_TIMEOUT = 10 * 1000;
-  const ELEVATOR_SPEED = (1 / 5) / 1000;
+  const ELEVATOR_SPEED = (1 / 100) / 1000;
   const BREAK_LEVEL = 0
 
   let generator = {}
@@ -18,7 +18,7 @@ var generator = function(){
     }
 
     for (var personIndex = 0; personIndex < state.people.length; personIndex++) {
-      state.levels[0].people.addPerson(state.people[personIndex].id);
+      state.levels[0].people.push(state.people[personIndex].id);
     }
 
     return state;
@@ -74,6 +74,14 @@ var generator = function(){
         return person.currentLevel == BREAK_LEVEL;
       }
 
+      person.getTargetLevel = function() {
+        if (person.shouldBeAtWork() && person.currentLevel != person.workLevel) {
+          return person.workLevel;
+        } else {
+          return person.breakLevel;
+        }
+      }
+
       person.requestElevatorUp = function() {
         looper.state.levels[person.currentLevel].requestElevatorUp();
       }
@@ -121,12 +129,12 @@ var generator = function(){
       }
 
       currentLevel.addPerson = function(person){
-        if(this.people.find(person.id) == -1) {
+        if(this.people.indexOf(person.id) == -1) {
           this.people.push(person.id)
         }
       }
       currentLevel.removePerson = function(person){
-        this.people = removeElementFromArray(person, this.people);
+        this.people = removeElementFromArray(person.id, this.people);
       }
 
       levels.push(currentLevel);
@@ -151,7 +159,7 @@ var generator = function(){
       }
 
       elevator.canAddPerson = function() {
-        return this.people.length + 1 < maximumNumberOfPeople
+        return this.people.length + 1 <= elevator.maximumNumberOfPeople
       }
 
       elevator.addPerson = function(person){
@@ -160,18 +168,20 @@ var generator = function(){
         }
         if(this.people.indexOf(person.id) == -1) {
           this.people.push(person.id)
+          person.isInElevator = true;
           return true;
         }
         return false;
       }
 
       elevator.removePerson = function(person){
-        this.people = removeElementFromArray(person, this.people);
+        this.people = removeElementFromArray(person.id, this.people);
+        person.isInElevator = false;
       }
 
-      elevator.addTargetLevel = function(level){
-        if(this.targetLevels.indexOf(level.id) == -1) {
-          this.targetLevels.push(level.id)
+      elevator.addTargetLevel = function(levelIndex){
+        if(this.targetLevels.indexOf(levelIndex) == -1) {
+          this.targetLevels.push(levelIndex)
         }
       }
 
@@ -223,15 +233,19 @@ var generator = function(){
       }
 
       elevator.isAtLevel = function() {
-        return elevator.currentLevel % 1 == 0;
+        return elevator.getLevel() != null;
       }
 
       elevator.getLevel = function() {
-        return looper.state.levels[elevator.currentLevel];
+        var roundedCurrentLevel = Math.round(elevator.currentLevel * 100) / 100;
+        if (roundedCurrentLevel % 1 == 0) {
+          return looper.state.levels[roundedCurrentLevel];
+        }
+        return null;
       }
 
       elevator.shouldStop = function() {
-        return elevator.shouldStopAtLevel(elevator.currentLevel);
+        return elevator.shouldStopAtLevel(elevator.getLevel());
       }
 
       elevator.shouldStopAtLevel = function(level) {
@@ -242,7 +256,7 @@ var generator = function(){
           // elevator already stopped
           return false;
         } else {
-          return elevator.targetLevels[0] == level;
+          return elevator.targetLevels[0] == level.id;
         }
       }
 
@@ -264,7 +278,6 @@ var generator = function(){
     }
     return array;
   }
-
 
   function getMillisecondsFromTime(hour) {
     return hour * 60 * 60 * 1000;

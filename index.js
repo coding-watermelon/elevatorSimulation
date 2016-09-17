@@ -21,7 +21,7 @@ function initialize() {
 // generates a state that will be used for
 // initializing the looper
 function generateInitialState() {
-  var peopleCount = getUrlParam("peopleCount", 10);
+  var peopleCount = getUrlParam("peopleCount", 20);
   var elevatorCount = getUrlParam("elevatorCount", 4);
   var levelCount = getUrlParam("levelCount", 6);
   var initialState = generator.initialize(peopleCount, elevatorCount, levelCount);  
