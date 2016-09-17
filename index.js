@@ -13,7 +13,7 @@ function initialize() {
 
   smartLogic.initialize(initialState);
 
-  var logic = randomLogic;
+  var logic = smartLogic;
 
   looper.initialize(initialState, logic);
   looper.setSpeedFactor(getUrlParam("speedFactor", 20));

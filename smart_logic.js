@@ -17,17 +17,32 @@ var smartLogic = function(){
     }
     logic.model = model
   }
+
+  function getNearestElevatorIndex(level) {
+    var nearestElevatorIndex = 0
+    var minimalDistance = Math.abs(looper.state.elevators[nearestElevatorIndex].currentLevel - level)
+    for (var i = 0; i < looper.state.elevators.length; i++) {
+        if(Math.abs(looper.state.elevators[i].currentLevel - level) < minimalDistance) {
+            minimalDistance = Math.abs(looper.state.elevators[i].currentLevel - level)
+            nearestElevatorIndex = i
+        }
+    }
+    console.log('Nearest elevator for level ' + level + ' is elevator ' + nearestElevatorIndex)
+    return nearestElevatorIndex
+  }
   
   logic.onElevatorUpRequested = function(level) {
     console.log("onElevatorUpRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level]++
+    looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
   logic.onElevatorDownRequested = function(level) {
     console.log("onElevatorDownRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level]++
+    looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
   logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {
@@ -35,8 +50,18 @@ var smartLogic = function(){
   }
 
   logic.onElevatorIdle = function(elevator) {
-    //stay on the level
-    //console.log("onElevatorIdle");
+    //move to most frequented level
+    console.log("onElevatorIdle");
+    currentSeconds = getSecondsOfTheDay(looper.currentTimeStamp)
+    maxRequests = 0
+    maxRequestsIndex = 0
+    for(levelIndex = 0; levelIndex < logic.model[currentSeconds].length; levelIndex++) {
+      if(logic.model[currentSeconds][levelIndex] > maxRequests) {
+        maxRequests = logic.model[currentSeconds][levelIndex]
+        maxRequestsIndex = levelIndex
+      }
+    }
+    looper.state.elevators[elevator.id].addTargetLevel(maxRequestsIndex);
   }
 
   logic.onElevatorStopped = function(elevator) {
