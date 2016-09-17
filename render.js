@@ -1,0 +1,3 @@
+function renderState(state, canvas) {
+	
+}
