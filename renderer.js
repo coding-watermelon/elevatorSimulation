@@ -12,8 +12,8 @@ var renderer = function(){
   renderer.latestState;
 
   renderer.primaryColor = "#388E3C";
-  renderer.primaryColorLight = "#4CAF50";
-  renderer.primaryColorDark = "#1B5E20";
+  renderer.primaryColorLight = "#43A047";
+  renderer.primaryColorDark = "#2E7D32";
   renderer.secondaryColor = "#FBC02D";
 
   renderer.elevatorColor = "#FFFFFF";
@@ -79,8 +79,8 @@ var renderer = function(){
       var ctx = canvas.getContext("2d");
       var options = renderer.getDrawOptions(canvas, state);
       renderer.drawBase(canvas, ctx, state, options);
-      renderer.drawElevators(canvas, ctx, state, options);
       renderer.drawLevels(canvas, ctx, state, options);
+      renderer.drawElevators(canvas, ctx, state, options);
       renderer.drawPeople(canvas, ctx, state, options);
     } catch(ex) {
       console.log(ex);
@@ -114,6 +114,12 @@ var renderer = function(){
     options.levelsStartX = Math.round((canvas.width / 2) - (options.levelsWidth / 2));
     options.levelsStartY = options.elevatorsStartY;
 
+    var minimumPeopleWidth = 5;
+    options.peopleMargin = 2;
+    options.elevatorContentWidth = options.elevatorWidth - (2 * options.elevatorPadding);
+    options.peoplePerElevatorRow = Math.floor(options.elevatorContentWidth / (minimumPeopleWidth + (3 * options.peopleMargin)));
+    options.peopleWidth = Math.round(options.elevatorContentWidth / options.peoplePerElevatorRow);
+    
     return options;
   }
 
@@ -133,7 +139,7 @@ var renderer = function(){
     ctx.restore();
     ctx.strokeStyle = renderer.elevatorColor;
     ctx.fillStyle = renderer.elevatorColor;
-    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
 
     // frame
     //ctx.strokeRect(options.elevatorsStartX, options.elevatorsStartY, options.elevatorsWidth, options.elevatorsHeight);
@@ -146,29 +152,49 @@ var renderer = function(){
       var elevatorEndX = elevatorStartX + options.elevatorWidth;
       var elevatorEndY = elevatorStartY + options.elevatorHeight;
 
-      // elevator boxes
-      ctx.strokeStyle = renderer.elevatorColor;
-      ctx.fillStyle = renderer.elevatorColor;
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
-
-      // label
-      ctx.font="lighter 10px Arial";
-      ctx.fillText(index + 1, elevatorStartX + (options.elevatorWidth / 2) - 3.5, elevatorStartY - 4);
-
       // holder
-      var holderWidth = 20;
-      var holderHeight = 15;
+      var holderWidth = 15;
+      var holderHeight = holderWidth;
       var holderStartX = elevatorStartX + (options.elevatorWidth / 2) - (holderWidth / 2);
       var holderStartY = elevatorStartY - holderHeight;
 
       ctx.lineWidth = 1;
-      ctx.strokeRect(holderStartX, holderStartY, holderWidth, holderHeight);
+      ctx.beginPath();
+      ctx.arc(holderStartX + holderWidth / 2, holderStartY + holderHeight, holderWidth, 1 * Math.PI, 2 * Math.PI);
+      ctx.fillStyle = renderer.primaryColorDark;
+      ctx.fill();
+      ctx.stroke();
 
+      // holder line
       ctx.beginPath();
       ctx.moveTo(holderStartX + (holderWidth / 2), holderStartY);
       ctx.lineTo(holderStartX + (holderWidth / 2), 0);
       ctx.stroke();
+
+      // elevator box
+      ctx.strokeStyle = renderer.elevatorColor;
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
+      ctx.strokeRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
+
+      // label
+      ctx.font="lighter 10px Arial";
+      ctx.fillStyle = renderer.elevatorColor;
+      ctx.fillText(index + 1, elevatorStartX + (options.elevatorWidth / 2) - 3.5, elevatorStartY - 4);
+
+      // people
+      for (var peopleIndex = 0; peopleIndex < elevator.people.length; peopleIndex++) {
+        var rowIndex = peopleIndex % (options.peoplePerElevatorRow - 1);
+        var collumnIndex = Math.floor(peopleIndex / (options.peoplePerElevatorRow - 1));
+        var offsetX = rowIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
+        var offsetY = collumnIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
+        
+        var peopleStartX = elevatorStartX + options.elevatorPadding + offsetX;
+        var peopleStartY = elevatorEndY - options.elevatorMargin - options.elevatorPadding - offsetY;
+
+        ctx.lineWidth = 1;
+        ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
+      }
     }
   }
 
@@ -177,6 +203,21 @@ var renderer = function(){
     ctx.strokeStyle = renderer.levelColor;
     ctx.fillStyle = renderer.levelColor;
     ctx.lineWidth = 1;
+
+    var getLevelName = function(index) {
+      switch (index) {
+        case 0:
+          return "Ground";
+        case 1:
+          return "1st floor";
+        case 2:
+          return "2nd floor";
+        case 3:
+          return "3rd floor";
+        default:
+          return index + "th floor";
+      }
+    }
 
     for (var index = 0; index < state.levels.length; index++) {
       var level = state.levels[index];
@@ -194,8 +235,9 @@ var renderer = function(){
       ctx.stroke();
 
       // label
-      ctx.font="lighter 15px Arial";
-      ctx.fillText(index, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
+      ctx.font = "lighter 14px Arial";
+      var levelName = getLevelName(index);
+      ctx.fillText(levelName, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
     }
   }
 
