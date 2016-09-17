@@ -1,116 +1,67 @@
-// Loop
-// Iterate over people
-// 	Check if they want to get to a different level
-// 	Set level requests accordingly
+var looper = function(){
 
-// Iterate over levels
-// 	Request elevators (Logic is called here! Pushes to targetLevel Array)
+  var looper = {
+  };
 
-// Iterate over elevators (set new current level)
-// 	Check wait timeout (reduce or change current level)
-// 	Fire event if reached a target level
-// 		Let people enter / exit elevator 
+  looper.loopInterval = 10;
+  looper.loopIntervalObject;
 
-let EXIT = false
-let LOOP_DURATION = 10 // Milliseconds one loop iteration represents
-let ELEVATOR_TIMEOUT = 2000 // Timeout of elevator in Milliseconds
+  looper.currentTimeStamp = 0;
+  looper.loopTimeStampDelta = 100;
 
-// Defines Point in Time
-let now = 0
+  looper.state;
+  looper.logic;
 
-function startLoop(){
-  if(!state)
-    throw "Error - State not yet defined"
-
-  while(!EXIT){
-
-    // Check people for changing level and fire event also calls logic
-    iteratePeople()
-
-    // Iterate through elevators and set new position accordingly
-    iterateElevators()
-
-    now += LOOP_DURATION
+  looper.initialize = function(initialState, logic) {
+    looper.state = initialState;
+    looper.logic = logic;
   }
 
+  looper.startLooping = function() {
+    console.log("Starting looping");
+    renderer.loopIntervalObject = window.setInterval(looper.loop, looper.loopInterval);
+  }
 
-  function iteratePeople(){
-    for(var index in state.people){
-      let person = state.people[index]
+  looper.stopLooping = function() {
+    console.log("Stopping looping");
+    window.clearInterval(looper.loopIntervalObject);
+  }
 
-      // If person is coming to work or coming back from break
-      if(now > person.workStartTime && now < person.breakStartTime || 
-         now > person.breakStopTime && now < person.workStopTime){
-        state.levels[person.workLevel].requestUp()
-      } // if person is going to break or going home
-      else if (
-        now > person.breakStartTime && now < person.breakStopTime || 
-        now > person.workStopTime ) {
-          state.levels[person.workLevel].requestDown()
+  looper.loop = function() {
+    looper.processPeople();
+    looper.processElevators();
+    looper.currentTimeStamp += looper.loopTimeStampDelta;
+  }
+
+  looper.processPeople = function() {
+    for (var personIndex = 0; personIndex < looper.state.people.length; personIndex++) {
+      var person = looper.state.people[personIndex];
+      
+      // check if person needs to get to work
+      if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
+        if (person.currentLevel > person.breakLevel) {
+          person.requestElevatorDown();
+        } else if (person.currentLevel < person.breakLevel) {
+          person.requestElevatorUp();
         }
-
-    }
-  }
-
-  function iterateElevators(){
-    for(var index in state.elevators){
-      let elevator = state.elevators[index]
-
-      // If elevator currently stays at one level and is busy
-      if(elevator.waitTimeout > 0){
-        elevator.waitTimeout = Math.max(0, elevator.waitTimeout - LOOP_DURATION)
         continue;
       }
 
-      // Get next level of elevator
-      
-      // sort targetLevels in descending order
-      elevator.targetLevels = elevator.targetLevels.sort(function(a,b){return b-a})
-      
-      // Find out the next target level the elevator goes to
-      var nextLevel = -1;
-      for(var targetIndex in elevator.targetLevels){
-        let level = elevator.targetLevels[targetIndex]
-        if(elevator.direction == 'up'){
-          if(elevator.currentLevel < level && (nextLevel == -1 || nextLevel > level)){
-            nextLevel = level
-          }
-        }else{
-          if(elevator.currentLevel > level && (nextLevel == -1 || nextLevel < level)){
-            nextLevel = level
-          }
+      // check if person needs to have a break
+      if (person.shouldHaveABreak() && !person.isAtBreakLevel()) {
+        if (person.currentLevel > person.breakLevel) {
+          person.requestElevatorDown();
+        } else if (person.currentLevel < person.breakLevel) {
+          person.requestElevatorUp();
         }
+        continue;
       }
-
-      if(elevator.direction == 'up'){
-        elevator.moveUp(LOOP_DURATION / 1000)
-      }else{
-        elevator.moveDown(LOOP_DURATION / 1000)
-      }
-
-
-      if(elevator.direction == 'up' && elevator.currentLevel > nextLevel){
-        elevator.currentLevel = nextLevel
-        elevator.waitTimeout = ELEVATOR_TIMEOUT
-
-      }else if(elevator.direction == 'down' && elevator.currentLevel < nextLevel){
-        elevator.currentLevel = nextLevel
-        elevator.waitTimeout = ELEVATOR_TIMEOUT
-        exchangePersons(elevator)
-      }
-
     }
   }
 
-  // Exchange Persons between elevator and his current Level
-  // TODO: Person needs to know where he has to leave the elevator -> save it somewhere
-  function exchangePersons(elevator){
-    // for(var idIndex in elevator.people){
-    //   var person = state.people.filter(function(person){
-    //                     return person.id == elevator.people[idIndex]})[0]
-    //   if(person.)
+  looper.processElevators = function() {
 
-    // }
   }
 
+  return looper;
 }

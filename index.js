@@ -12,7 +12,7 @@ function initialize() {
 
   // TODO: start generating data
 
-  var state = generateFakeState();
+  state = generateFakeState();
   console.log(state);
 
   renderer.setLatestState(state);

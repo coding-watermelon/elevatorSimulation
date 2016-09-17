@@ -3,6 +3,7 @@
 var generator = function(){
   const MAX_NUMBER_OF_PEOPLE = 16;
   const ELEVATOR_SPEED = 2
+  const BREAK_LEVEL = 0
 
   let generator = {}
   let people = []
@@ -51,6 +52,42 @@ var generator = function(){
         person.workStopTime = person.workStartTime + startTimeDistribution()
       }
       person.workLevel = rand(1, levelCount-1, true)
+      person.breakLevel = 0;
+      person.currentLevel = 0;
+      person.isInElevator = false;
+      person.isWaitingForElevator = false;
+
+      person.shouldHaveABreak = function(timestamp) {
+        if (timestamp > person.breakStartTime && timestamp < person.breakStopTime) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+      person.shouldBeAtWork = function(timestamp) {
+        if (timestamp < person.workStartTime || timestamp > person.workStopTime) {
+          return false;
+        }
+        return !person.shouldHaveABreak(timestamp);
+      }
+
+      person.isAtWorkLevel = function() {
+        return person.currentLevel == person.workLevel;
+      }
+
+      person.isAtBreakLevel = function() {
+        return person.currentLevel == BREAK_LEVEL;
+      }
+
+      person.requestElevatorUp = function() {
+        looper.state.levels[person.currentLevel].requestUp();
+      }
+
+      person.requestElevatorDown = function() {
+        looper.state.levels[person.currentLevel].requestDown();
+      }
+
       people.push(person)
     }
     return people
