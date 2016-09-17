@@ -18,5 +18,6 @@ function initialize() {
   console.log(initialState);
 
   renderer.setLatestState(initialState);
+  renderer.renderLatestState();
   //renderer.startRenderingStates();
 }

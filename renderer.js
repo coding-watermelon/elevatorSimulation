@@ -95,20 +95,46 @@ var renderer = function(){
 
     // background
     ctx.fillStyle = renderer.primaryColor;
-    ctx.strokeStyle = renderer.primaryColorDark;
+    ctx.strokeStyle = renderer.primaryColor;
+    ctx.lineWidth = 1;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
   }
 
   renderer.drawElevators = function(canvas, ctx, state) {
-    // frames
-    
-    
+    var elevatorMargin = 10;
+    var elevatorPadding = 5;
+    var elevatorWidth = 75;
+    var elevatorHeight = 100;
+
+    var elevatorsWidth = Math.round(elevatorWidth * state.elevators.length) + (elevatorMargin * 2 * state.elevators.length)
+    var elevatorsHeight = Math.round(canvas.height * 0.9);
+
+    var elevatorsStartX = Math.round((canvas.width / 2) - (elevatorsWidth / 2));
+    var elevatorsStartY = Math.round((canvas.height / 2) - (elevatorsHeight / 2));
+    var elevatorsEndX = elevatorsStartX + elevatorsWidth;
+    var elevatorsEndY = elevatorsStartY + elevatorsHeight;
+
+    // frame
+    ctx.restore();
+    ctx.strokeStyle = renderer.elevatorColor;
+    ctx.fillStyle = renderer.elevatorColor;
+    ctx.strokeRect(elevatorsStartX, elevatorsStartY, elevatorsWidth, elevatorsHeight);
+
+    for (var index = 0; index < state.elevators.length; index++) {
+      var elevator = state.elevators[index];
+
+      var elevatorStartX = elevatorsStartX + elevatorMargin + (index * (elevatorWidth + 2 * elevatorMargin));
+      var elevatorStartY = elevatorsStartY;
+      var elevatorEndX = elevatorStartX + elevatorWidth;
+      var elevatorEndY = elevatorStartY + elevatorHeight;
+
+      // frame
+      ctx.strokeRect(elevatorStartX, elevatorStartY, elevatorWidth, elevatorHeight);
+    }
   }
 
   renderer.drawLevels = function(canvas, ctx, state) {
-    ctx.fillStyle = renderer.primaryColor;
-    ctx.strokeStyle = renderer.primaryColorDark;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   renderer.drawPeople = function(canvas, ctx, state) {
