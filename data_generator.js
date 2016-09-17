@@ -50,7 +50,7 @@ var generator = function(){
         // Between 8 and 10 hours after start
         person.workStopTime = person.workStartTime + startTimeDistribution()
       }
-      person.workLevel = rand(1, levelCount, true)
+      person.workLevel = rand(1, levelCount-1, true)
       people.push(person)
     }
     return people

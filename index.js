@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function(){
   initialize();
 }, false);
 
+var state = null
+
 function initialize() {
   console.log("Initializing");
 
@@ -16,6 +18,7 @@ function initialize() {
   renderer.setLatestState(state);
   renderer.renderLatestState();
   //renderer.startRenderingStates();
+  startLoop()
 }
 
 function generateFakeState() {

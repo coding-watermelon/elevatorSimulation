@@ -16,7 +16,6 @@ let ELEVATOR_TIMEOUT = 2000 // Timeout of elevator in Milliseconds
 
 // Defines Point in Time
 let now = 0
-let state = null
 
 function startLoop(){
   if(!state)
@@ -97,7 +96,7 @@ function startLoop(){
         elevator.currentLevel = nextLevel
         elevator.waitTimeout = ELEVATOR_TIMEOUT
       }
-      
+
     }
   }
 
