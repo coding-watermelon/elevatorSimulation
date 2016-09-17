@@ -31,12 +31,14 @@ var looper = function(){
     looper.processPeople();
     looper.processElevators();
     looper.currentTimeStamp += looper.loopTimeStampDelta;
+    looper.state.timestamp = looper.currentTimeStamp;
+    renderer.setLatestState(looper.state);
   }
 
   looper.processPeople = function() {
     for (var personIndex = 0; personIndex < looper.state.people.length; personIndex++) {
       var person = looper.state.people[personIndex];
-      
+
       // check if person needs to get to work
       if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
         if (person.currentLevel > person.breakLevel) {
@@ -64,4 +66,4 @@ var looper = function(){
   }
 
   return looper;
-}
+}();

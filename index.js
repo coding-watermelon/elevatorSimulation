@@ -2,30 +2,36 @@ document.addEventListener('DOMContentLoaded', function(){
   initialize();
 }, false);
 
-var state = null
-
 function initialize() {
   console.log("Initializing");
 
   var canvas = document.getElementById("canvas");
   renderer.initializeCanvas(canvas);
 
-  // TODO: start generating data
+  var initialState = generateInitialState();
+  console.log(initialState);
 
-  state = generateFakeState();
-  console.log(state);
+  var logic = null; // TODO: get logic here
 
-  renderer.setLatestState(state);
-  renderer.renderLatestState();
+  looper.initialize(initialState, logic);
+  looper.startLooping();
   //renderer.startRenderingStates();
-  startLoop()
 }
 
-function generateFakeState() {
+// generates a state that will be used for
+// initializing the looper
+function generateInitialState() {
   var peopleCount = getUrlParam("peopleCount", 100);
   var elevatorCount = getUrlParam("elevatorCount", 4);
   var levelCount = getUrlParam("levelCount", 6);
-  var initialState = generator.init(peopleCount, elevatorCount, levelCount);
+  var initialState = generator.init(peopleCount, elevatorCount, levelCount);  
+  return initialState;
+}
+
+// generates a state that can be used to test
+// the state rendering
+function generateFakeState() {
+  var initialState = generateInitialState();
 
   for (var elevatorIndex = 0; elevatorIndex < initialState.elevators.length; elevatorIndex++) {
     var people = Math.floor(Math.random() * 10);

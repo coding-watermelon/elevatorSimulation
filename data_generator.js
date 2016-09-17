@@ -81,11 +81,11 @@ var generator = function(){
       }
 
       person.requestElevatorUp = function() {
-        looper.state.levels[person.currentLevel].requestUp();
+        looper.state.levels[person.currentLevel].requestElevatorUp();
       }
 
       person.requestElevatorDown = function() {
-        looper.state.levels[person.currentLevel].requestDown();
+        looper.state.levels[person.currentLevel].requestElevatorDown();
       }
 
       people.push(person)
@@ -103,7 +103,7 @@ var generator = function(){
   }
 
   function generateLevels(count){
-    let level = {}
+    let levels = []
 
     for(var i=0; i<count; i++){
       let currentLevel = {
@@ -114,14 +114,14 @@ var generator = function(){
       }
 
       // functions of level object
-      currentLevel.requestUp = function(){
+      currentLevel.requestElevatorUp = function(){
         this.elevatorUpRequested = true
         if(!this.elevatorUpRequested){
           // Call logic
           logic.requestElevatorUp(this)
         }
       }
-      currentLevel.requestDown = function(){
+      currentLevel.requestElevatorDown = function(){
         if(!this.elevatorDownRequested){
           // Call logic
           logic.requestElevatorDown(this)
@@ -141,10 +141,10 @@ var generator = function(){
         })
       }
 
-      level[i] = currentLevel
+      levels.push(currentLevel);
     }
 
-    return level
+    return levels
   }
 
   function generateElevators(count){
@@ -231,4 +231,4 @@ var generator = function(){
   }
 
   return generator;
-}()
+}();
