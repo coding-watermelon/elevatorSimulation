@@ -6,7 +6,7 @@ var looper = function(){
   looper.loopInterval = 10;
   looper.loopIntervalObject;
 
-  looper.currentTimeStamp = 0;
+  looper.currentTimeStamp = 7 * 60 * 60 * 1000;
   looper.loopTimeStampDelta = 100;
 
   looper.state;

@@ -19,6 +19,7 @@ var renderer = function(){
   renderer.elevatorColor = "#FFFFFF";
   renderer.levelColor = "#FFFFFF";
   renderer.statsColor = "#FFFFFF";
+  renderer.whiteOverlay = "rgba(255, 255, 255, 0.33)";
 
 
   renderer.initializeCanvas = function(canvas) {
@@ -252,18 +253,27 @@ var renderer = function(){
       ctx.stroke();
 
       // label
-      ctx.fillStyle = renderer.levelColor;
+      ctx.fillStyle = renderer.whiteOverlay;
       ctx.font = "lighter 14px Arial";
       var levelName = getLevelName(index);
-      ctx.fillText(levelName, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
+      ctx.fillText(levelName, levelEndX + 5, levelEndY + 4);
 
       ctx.setLineDash([]);
       ctx.lineWidth = 1;
 
       // people
+      var waitingCount = 0;
       for (var peopleIndex = 0; peopleIndex < level.people.length; peopleIndex++) {
+        var person = state.people[level.people[peopleIndex]];
+        if (person.isWaitingForElevator) {
+          waitingCount++;
+          ctx.fillStyle = renderer.primaryColorLight;
+        } else {
+          ctx.fillStyle = renderer.primaryColorDark;
+        }
+
         if (peopleIndex >= options.maximumPeoplePerLevel) {
-          break;
+          continue;
         }
 
         var rowIndex = peopleIndex % (options.peoplePerLevelRow);
@@ -274,15 +284,19 @@ var renderer = function(){
         var peopleStartX = levelEndX - options.levelContentWidth + offsetX;
         var peopleStartY = levelEndY - (2 * options.elevatorMargin) - options.elevatorPadding - offsetY;
 
-        var person = state.people[level.people[peopleIndex]];
-        if (person.isWaitingForElevator) {
-          ctx.fillStyle = renderer.primaryColorLight;
-        } else {
-          ctx.fillStyle = renderer.primaryColorDark;
-        }
         ctx.fillRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
         ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
       }
+
+      // counts
+      ctx.fillStyle = renderer.whiteOverlay;
+      ctx.font = "lighter 40px Arial";
+      var waitingCountWidth = ctx.measureText(waitingCount).width;
+      ctx.fillText(waitingCount, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 10);
+
+      ctx.font = "lighter 14px Arial";
+      ctx.fillText("people waiting", levelStartX + 15 + waitingCountWidth, levelStartY + (options.levelHeight / 2) - 9);
+      ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 15 + waitingCountWidth, levelStartY + (options.levelHeight / 2) + 9);
     }
   }
 

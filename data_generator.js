@@ -51,7 +51,8 @@ var generator = function(){
       person.isInElevator = false;
       person.isWaitingForElevator = false;
 
-      person.shouldHaveABreak = function(timestamp) {
+      person.shouldHaveABreak = function() {
+        var timestamp = looper.state.timestamp;
         if (timestamp > person.breakStartTime && timestamp < person.breakStopTime) {
           return true;
         } else {
@@ -59,7 +60,8 @@ var generator = function(){
         }
       }
 
-      person.shouldBeAtWork = function(timestamp) {
+      person.shouldBeAtWork = function() {
+        var timestamp = looper.state.timestamp;
         if (timestamp < person.workStartTime || timestamp > person.workStopTime) {
           return false;
         }
