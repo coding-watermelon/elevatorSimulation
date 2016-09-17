@@ -66,7 +66,7 @@ var generator = function(){
     let level = []
 
     for(var i=0; i<count; i++){
-      let currLevel = {
+      let currentLevel = {
         id: i,
         people: [],
         elevatorUpRequested: false,
@@ -74,34 +74,34 @@ var generator = function(){
       }
 
       // functions of level object
-      currLevel.requestUp = function(){
+      currentLevel.requestUp = function(){
         this.elevatorUpRequested = true
         if(!this.elevatorUpRequested){
           // Call logic
           logic.requestElevatorUp(this)
         }
       }
-      currLevel.requestDown = function(){
+      currentLevel.requestDown = function(){
         if(!this.elevatorDownRequested){
           // Call logic
           logic.requestElevatorDown(this)
         }
         this.elevatorDownRequested = true
       }
-      currLevel.resetUp = function(){this.elevatorUpRequested = false}
-      currLevel.resetDown = function(){this.elevatorDownRequested = false}
+      currentLevel.resetUp = function(){this.elevatorUpRequested = false}
+      currentLevel.resetDown = function(){this.elevatorDownRequested = false}
 
-      currLevel.addPerson = function(person){
+      currentLevel.addPerson = function(person){
         if(this.people.find(person.id) == -1)
           this.people.push(person.id)
       }
-      currLevel.removePerson = function(person){
+      currentLevel.removePerson = function(person){
         this.people = this.people.filter(function(people){
           return people != person.id
         })
       }
 
-      level.push(currLevel)
+      level.push(currentLevel)
     }
 
     return level
@@ -115,7 +115,7 @@ var generator = function(){
         id: i,
         maximumNumberOfPeople: MAX_NUMBER_OF_PEOPLE,
         people: [],
-        currLevel: 0,
+        currentLevel: 0,
         targetLevels: [],
         // seconds used for 1 level
         speed: ELEVATOR_SPEED,
@@ -137,15 +137,15 @@ var generator = function(){
           this.targetLevels.push(level.id)
       }
       elevator.removeTargetLevel = function(level){
-        this.targetLevels = this.targetLevels.filter(function(currLevel){
-          return currLevel != level.id
+        this.targetLevels = this.targetLevels.filter(function(currentLevel){
+          return currentLevel != level.id
         })
       }
       elevator.moveUp = function(seconds){
-        this.currLevel += seconds / this.speed
+        this.currentLevel += seconds / this.speed
       }
       elevator.moveDown = function(seconds){
-        this.currLevel -= seconds / this.speed
+        this.currentLevel -= seconds / this.speed
       }
 
 

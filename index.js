@@ -15,6 +15,8 @@ function initialize() {
   var levelCount = 7;
   
   var initialState = generator.init(peopleCount, elevatorCount, levelCount);
+  console.log(initialState);
+
   renderer.setLatestState(initialState);
-  renderer.startRenderingStates();
+  //renderer.startRenderingStates();
 }

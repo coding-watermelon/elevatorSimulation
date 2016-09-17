@@ -15,7 +15,7 @@ var renderer = function(){
   renderer.primaryColorLight = "#4CAF50";
   renderer.primaryColorDark = "#1B5E20";
   renderer.secondaryColor = "#FBC02D";
-  
+
   renderer.elevatorColor = "#FFFFFF";
   renderer.levelColor = "#FFFFFF";
 
@@ -24,6 +24,12 @@ var renderer = function(){
     console.log("Initializing canvas");
     canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    window.onresize = function(event) {
+      renderer.canvas.width  = window.innerWidth;
+      renderer.canvas.height = window.innerHeight;
+      renderer.renderLatestState(true);
+    };
 
     renderer.canvas = canvas;
   }
@@ -58,8 +64,8 @@ var renderer = function(){
     return true;
   }
 
-  renderer.renderLatestState = function() {
-    if (renderer.shouldRenderState(renderer.latestState)) {
+  renderer.renderLatestState = function(force) {
+    if (force || renderer.shouldRenderState(renderer.latestState)) {
       renderer.renderStateOnCanvas(renderer.latestState, renderer.canvas);
     } else {
       console.log("Skipping state rendering");
@@ -88,17 +94,21 @@ var renderer = function(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // background
-    ctx.fillStyle = 'rgba(0,0,0,0.4)';
-    ctx.strokeStyle = 'rgba(0,153,255,0.4)';
+    ctx.fillStyle = renderer.primaryColor;
+    ctx.strokeStyle = renderer.primaryColorDark;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   renderer.drawElevators = function(canvas, ctx, state) {
+    // frames
+    
     
   }
 
   renderer.drawLevels = function(canvas, ctx, state) {
-    
+    ctx.fillStyle = renderer.primaryColor;
+    ctx.strokeStyle = renderer.primaryColorDark;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
   }
 
   renderer.drawPeople = function(canvas, ctx, state) {
