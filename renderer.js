@@ -77,10 +77,11 @@ var renderer = function(){
 
     try {
       var ctx = canvas.getContext("2d");
-      renderer.drawBase(canvas, ctx, state);
-      renderer.drawElevators(canvas, ctx, state);
-      renderer.drawLevels(canvas, ctx, state);
-      renderer.drawPeople(canvas, ctx, state);
+      var options = renderer.getDrawOptions(canvas, state);
+      renderer.drawBase(canvas, ctx, state, options);
+      renderer.drawElevators(canvas, ctx, state, options);
+      renderer.drawLevels(canvas, ctx, state, options);
+      renderer.drawPeople(canvas, ctx, state, options);
     } catch(ex) {
       console.log(ex);
     }
@@ -89,7 +90,29 @@ var renderer = function(){
     renderer.lastRenderedState = state;
   }
 
-  renderer.drawBase = function(canvas, ctx, state) {
+  renderer.getDrawOptions = function(canvas, state) {
+    var options = {};
+
+    options.levelsHeight = Math.round(canvas.height * 0.9);
+    options.levelHeight = Math.round(options.levelsHeight / state.levels.length);
+    
+    options.elevatorMargin = 10;
+    options.elevatorPadding = 5;
+    options.elevatorWidth = 75;
+    options.elevatorHeight = options.levelHeight + (options.elevatorMargin * 2);
+
+    options.elevatorsWidth = Math.round(options.elevatorWidth * state.elevators.length) + ((options.elevatorMargin * 2) * state.elevators.length)
+    options.elevatorsHeight = options.levelsHeight;
+
+    options.elevatorsStartX = Math.round((canvas.width / 2) - (options.elevatorsWidth / 2));
+    options.elevatorsStartY = Math.round((canvas.height / 2) - (options.elevatorsHeight / 2));
+    options.elevatorsEndX = options.elevatorsStartX + options.elevatorsWidth;
+    options.elevatorsEndY = options.elevatorsStartY + options.elevatorsHeight;
+
+    return options;
+  }
+
+  renderer.drawBase = function(canvas, ctx, state, options) {
     // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -101,43 +124,30 @@ var renderer = function(){
     ctx.save();
   }
 
-  renderer.drawElevators = function(canvas, ctx, state) {
-    var elevatorMargin = 10;
-    var elevatorPadding = 5;
-    var elevatorWidth = 75;
-    var elevatorHeight = 100;
-
-    var elevatorsWidth = Math.round(elevatorWidth * state.elevators.length) + (elevatorMargin * 2 * state.elevators.length)
-    var elevatorsHeight = Math.round(canvas.height * 0.9);
-
-    var elevatorsStartX = Math.round((canvas.width / 2) - (elevatorsWidth / 2));
-    var elevatorsStartY = Math.round((canvas.height / 2) - (elevatorsHeight / 2));
-    var elevatorsEndX = elevatorsStartX + elevatorsWidth;
-    var elevatorsEndY = elevatorsStartY + elevatorsHeight;
-
+  renderer.drawElevators = function(canvas, ctx, state, options) {
     // frame
     ctx.restore();
     ctx.strokeStyle = renderer.elevatorColor;
     ctx.fillStyle = renderer.elevatorColor;
-    ctx.strokeRect(elevatorsStartX, elevatorsStartY, elevatorsWidth, elevatorsHeight);
+    ctx.strokeRect(options.elevatorsStartX, options.elevatorsStartY, options.elevatorsWidth, options.elevatorsHeight);
 
     for (var index = 0; index < state.elevators.length; index++) {
       var elevator = state.elevators[index];
 
-      var elevatorStartX = elevatorsStartX + elevatorMargin + (index * (elevatorWidth + 2 * elevatorMargin));
-      var elevatorStartY = elevatorsStartY;
-      var elevatorEndX = elevatorStartX + elevatorWidth;
-      var elevatorEndY = elevatorStartY + elevatorHeight;
+      var elevatorStartX = options.elevatorsStartX + options.elevatorMargin + (index * (options.elevatorWidth + 2 * options.elevatorMargin));
+      var elevatorStartY = options.elevatorsStartY + options.elevatorMargin;
+      var elevatorEndX = elevatorStartX + options.elevatorWidth;
+      var elevatorEndY = elevatorStartY + options.elevatorHeight;
 
       // frame
-      ctx.strokeRect(elevatorStartX, elevatorStartY, elevatorWidth, elevatorHeight);
+      ctx.strokeRect(elevatorStartX, elevatorStartY, options.elevatorWidth, options.elevatorHeight);
     }
   }
 
-  renderer.drawLevels = function(canvas, ctx, state) {
+  renderer.drawLevels = function(canvas, ctx, state, options) {
   }
 
-  renderer.drawPeople = function(canvas, ctx, state) {
+  renderer.drawPeople = function(canvas, ctx, state, options) {
     
   }
 
