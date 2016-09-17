@@ -5,6 +5,8 @@ var generator = function(){
   const ELEVATOR_SPEED = 2
 
   let generator = {}
+  let people = []
+  
 
   generator.init = function(peopleCount, elevatorCount, levelCount){
     return {
@@ -16,23 +18,23 @@ var generator = function(){
 
   function generatePeople(count){
     let people = []
-    
+    var startTimeDistribution = gaussian(540, 60)
+    var stopTimeDistribution = gaussian(780, 60)
 
     for(var i=0; i<count; i++){
       let person = {}
       person.id = i
-
       // Time represented as number of minutes after 0 o clock 
       // is number between 0 and 1440
       // Starttime between 8 o clock and 10 o clock
-      person.workStartTime = gaussian(540, 60) 
+      person.workStartTime = startTimeDistribution()
       
       // Between 12 am and 2 pm
-      person.breakStartTime = gaussian(780, 60)
+      person.breakStartTime = stopTimeDistribution()
       person.breakStopTime = person.breakStartTime + 45
 
       // Between 8 and 10 hours after start
-      person.workStopTime = person.workStartTime + gaussian(540, 60)
+      person.workStopTime = person.workStartTime + startTimeDistribution()
 
       people.push(person)
     }
