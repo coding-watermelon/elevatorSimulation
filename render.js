@@ -13,7 +13,7 @@ var renderer = function(){
 
     renderer.canvas = canvas;
   }
-
+  
   renderer.shouldRenderState = function(state) {
     
   }
