@@ -11,8 +11,8 @@ var generator = function(){
   generator.init = function(peopleCount, elevatorCount, levelCount){
     return {
       people: generatePeople(peopleCount),
-      elevator: generateElevator(elevatorCount),
-      level: generateLevel(levelCount)
+      elevators: generateElevators(elevatorCount),
+      levels: generateLevels(levelCount)
     }
   }
 
@@ -62,7 +62,7 @@ var generator = function(){
     return Math.floor(Math.random() * (maxMin - minMin + 1)) + minMin;
   }
 
-  function generateLevel(count){
+  function generateLevels(count){
     let level = []
 
     for(var i=0; i<count; i++){
@@ -107,7 +107,7 @@ var generator = function(){
     return level
   }
 
-  function generateElevator(count){
+  function generateElevators(count){
     let elevators = []
 
     for(var i=0; i<count; i++){
