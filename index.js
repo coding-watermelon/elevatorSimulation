@@ -12,7 +12,7 @@ function initialize() {
 
   var peopleCount = 100;
   var elevatorCount = 5;
-  var levelCount = 7;
+  var levelCount = 5;
   
   var initialState = generator.init(peopleCount, elevatorCount, levelCount);
   console.log(initialState);
