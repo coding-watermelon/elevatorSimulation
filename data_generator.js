@@ -50,6 +50,7 @@ var generator = function(){
       person.currentLevel = 0;
       person.isInElevator = false;
       person.isWaitingForElevator = false;
+      person.waitingTime = 0;
 
       person.shouldHaveABreak = function() {
         var timestamp = looper.state.timestamp;
