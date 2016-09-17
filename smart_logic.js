@@ -1,6 +1,6 @@
 var smartLogic = function(){
 
-  var BATCH_COUNT = 60 * 60 * 24;
+  var BATCH_COUNT = 60 * 24;
 
   var logic = {
   };
@@ -19,13 +19,13 @@ var smartLogic = function(){
   }
 
   logic.getLevelScore = function(level) {
-    var past = getSecondsOfTheDay(looper.currentTimeStamp) - 5
+    var past = getMinutesOfTheDay(looper.currentTimeStamp) - 1
     if(past < 0) {
-      past = 0
+      past = 0;
     }
     var currentRequests = logic.model[past];
     var requestSum = 0;
-    for(var levelIndex = 0; levelIndex < currentRequests.length; levelIndex++) {
+    for(var levelIndex = 0; levelIndex < Object.keys(currentRequests).length; levelIndex++) {
       requestSum += currentRequests[levelIndex]
     }
     if(requestSum == 0) {
@@ -49,14 +49,14 @@ var smartLogic = function(){
   
   logic.onElevatorUpRequested = function(level) {
     console.log("onElevatorUpRequested");
-    seconds = getSecondsOfTheDay(looper.currentTimeStamp)
+    seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
   logic.onElevatorDownRequested = function(level) {
     console.log("onElevatorDownRequested");
-    seconds = getSecondsOfTheDay(looper.currentTimeStamp)
+    seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
@@ -68,7 +68,7 @@ var smartLogic = function(){
   logic.onElevatorIdle = function(elevator) {
     //move to most frequented level
     console.log("onElevatorIdle");
-    currentSeconds = getSecondsOfTheDay(looper.currentTimeStamp)
+    currentSeconds = getMinutesOfTheDay(looper.currentTimeStamp)
     maxRequests = 0
     maxRequestsIndex = 0
     for(levelIndex = 0; levelIndex < logic.model[currentSeconds].length; levelIndex++) {
@@ -84,9 +84,9 @@ var smartLogic = function(){
     //console.log("onElevatorStopped");
   }
 
-  function getSecondsOfTheDay(timestamp) {
+  function getMinutesOfTheDay(timestamp) {
     var dt = new Date(timestamp)
-    return dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours())
+    return dt.getMinutes() + (60 * dt.getHours())
   }
 
   return logic;
