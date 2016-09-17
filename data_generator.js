@@ -72,6 +72,35 @@ var generator = function(){
         elevatorUpRequested: false,
         elevatorDownRequested: false
       }
+
+      // functions of level object
+      currLevel.requestUp = function(){
+        this.elevatorUpRequested = true
+        if(!this.elevatorUpRequested){
+          // Call logic
+          logic.requestElevatorUp(this)
+        }
+      }
+      currLevel.requestDown = function(){
+        if(!this.elevatorDownRequested){
+          // Call logic
+          logic.requestElevatorDown(this)
+        }
+        this.elevatorDownRequested = true
+      }
+      currLevel.resetUp = function(){this.elevatorUpRequested = false}
+      currLevel.resetDown = function(){this.elevatorDownRequested = false}
+
+      currLevel.addPerson = function(person){
+        if(this.people.find(person.id) == -1)
+          this.people.push(person.id)
+      }
+      currLevel.removePerson = function(person){
+        this.people = this.people.filter(function(people){
+          return people != person.id
+        })
+      }
+
       level.push(currLevel)
     }
 
@@ -88,9 +117,38 @@ var generator = function(){
         people: [],
         currLevel: 0,
         targetLevels: [],
+        // seconds used for 1 level
         speed: ELEVATOR_SPEED,
         waitTimeout: 0
       }
+
+      // functions of elevator Object
+      elevator.addPerson = function(person){
+        if(this.people.find(person.id) == -1)
+          this.people.push(person.id)
+      }
+      elevator.removePerson = function(person){
+        this.people = this.people.filter(function(people){
+          return people != person.id
+        })
+      }
+      elevator.addTargetLevel = function(level){
+        if(this.targetLevels.find(level.id) == -1)
+          this.targetLevels.push(level.id)
+      }
+      elevator.removeTargetLevel = function(level){
+        this.targetLevels = this.targetLevels.filter(function(currLevel){
+          return currLevel != level.id
+        })
+      }
+      elevator.moveUp = function(seconds){
+        this.currLevel += seconds / this.speed
+      }
+      elevator.moveDown = function(seconds){
+        this.currLevel -= seconds / this.speed
+      }
+
+
       elevators.push(elevator)
     }
 
@@ -134,4 +192,4 @@ var generator = function(){
   return generator;
 }()
 
-console.log( generator.init(3,3,3) )
+console.log(generator.init(3,3,3))
