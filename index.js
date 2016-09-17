@@ -10,5 +10,11 @@ function initialize() {
 
   // TODO: start generating data
 
+  var peopleCount = 100;
+  var elevatorCount = 5;
+  var levelCount = 7;
+  
+  var initialState = generator.init(peopleCount, elevatorCount, levelCount);
+  renderer.setLatestState(initialState);
   renderer.startRenderingStates();
 }
