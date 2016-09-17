@@ -148,7 +148,7 @@ var renderer = function(){
     ctx.fillText(time, canvas.width - 100, 30);
 
     ctx.textAlign = "center";
-    var speed = Math.round(looper.loopTimeStampDelta / looper.loopInterval) + "x";
+    var speed = Math.round(looper.loopTimeStampDelta / looper.loopInterval) + "x speed";
     ctx.fillText(speed, 80, 30);
     
     ctx.save();
@@ -301,7 +301,7 @@ var renderer = function(){
       // counts
       ctx.fillStyle = renderer.whiteOverlay;
       ctx.font = "lighter 40px Arial";
-      var score = "?";
+      var score = Math.round(smartLogic.getLevelScore(level.id) * 100) + "%";
       var scoreWidth = ctx.measureText(score).width;
       ctx.fillText(score, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 10);
 
