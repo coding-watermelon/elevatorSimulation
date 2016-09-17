@@ -1,4 +1,8 @@
 'use strict'
+
+const MAX_NUMBER_OF_PEOPLE = 16;
+const ELEVATOR_SPEED = 2
+
 function generatePeople(count){
   let people = []
   
@@ -25,8 +29,47 @@ function generatePeople(count){
   return people
 }
 
-console.log( generatePeople(10) )
+function rand(minMin, maxMin) {
+  minMin = minMin * 60 * 1000
+  maxMin = maxMin * 60 * 1000
 
-function rand(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  return Math.floor(Math.random() * (maxMin - minMin + 1)) + minMin;
 }
+
+function generateLevel(count){
+  let level = []
+
+  for(var i=0; i<count; i++){
+    let currLevel = {
+      id: i,
+      people: [],
+      elevatorUpRequested: false,
+      elevatorDownRequested: false
+    }
+    level.push(currLevel)
+  }
+
+  return level
+}
+
+function generateElevator(count){
+  let elevators = []
+
+  for(var i=0; i<count; i++){
+    let elevator = {
+      id: i,
+      maximumNumberOfPeople: MAX_NUMBER_OF_PEOPLE,
+      people: [],
+      currLevel: 0,
+      targetLevels: [],
+      speed: ELEVATOR_SPEED,
+      waitTimeout: 0
+    }
+    elevators.push(elevator)
+  }
+
+  return elevators
+}
+
+
+
