@@ -179,8 +179,9 @@ var renderer = function(){
 
       // label
       ctx.font="lighter 10px Arial";
+      ctx.textAlign = "center"; 
       ctx.fillStyle = renderer.elevatorColor;
-      ctx.fillText(index + 1, elevatorStartX + (options.elevatorWidth / 2) - 3.5, elevatorStartY - 4);
+      ctx.fillText(index + 1, elevatorStartX + (options.elevatorWidth / 2), elevatorStartY - 4);
 
       // people
       for (var peopleIndex = 0; peopleIndex < elevator.people.length; peopleIndex++) {
