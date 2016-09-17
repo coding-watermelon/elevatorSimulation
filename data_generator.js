@@ -28,16 +28,17 @@ var generator = function(){
     let people = []
     var startTimeDistribution = gaussian(getMillisecondsFromTime(7.5), getMillisecondsFromTime(0.25))
     var breakTimeDistribution = gaussian(getMillisecondsFromTime(12), getMillisecondsFromTime(0.25))
+    var workLevelDistribution = gaussian(levelCount / 2, 2)
 
     for(var i=0; i<count; i++){
       let person = {}
       person.id = i
 
-      var generateOutlier = Math.random() < 0.1;
+      var generateOutlier = Math.random() < 0.25;
       if (generateOutlier) {
-        person.workStartTime = gaussian(getMillisecondsFromTime(5), getMillisecondsFromTime(3))()
-        person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))()
-        person.breakStopTime = person.breakStartTime + gaussian(getMillisecondsFromTime(0.5), getMillisecondsFromTime(0.45))()
+        person.workStartTime = gaussian(getMillisecondsFromTime(9), getMillisecondsFromTime(3))()
+        person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(3), getMillisecondsFromTime(2))()
+        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.45)
         person.workStopTime = person.breakStopTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))()
       } else {
         person.workStartTime = startTimeDistribution()
@@ -45,7 +46,10 @@ var generator = function(){
         person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.45)
         person.workStopTime = person.workStartTime + getMillisecondsFromTime(9)
       }
-      person.workLevel = getRandomNumberBetween(1, levelCount-1)
+      person.workLevel = workLevelDistribution();
+      person.workLevel = Math.max(person.workLevel, 1);
+      person.workLevel = Math.min(person.workLevel, levelCount - 1);
+
       person.breakLevel = 0;
       person.currentLevel = 0;
       person.isInElevator = false;
