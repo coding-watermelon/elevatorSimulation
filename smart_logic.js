@@ -18,12 +18,24 @@ var smartLogic = function(){
     logic.model = model
   }
 
+  logic.getLevelScore = function(level) {
+    var currentRequests = logic.model[getSecondsOfTheDay(looper.currentTimeStamp)];
+    var requestSum = 0;
+    for(var levelIndex = 0; levelIndex < currentRequests.length; levelIndex++) {
+      requestSum += currentRequests[levelIndex]
+    }
+    if(requestSum == 0) {
+      return 0;
+    }
+    return currentRequests[level]/requestSum;
+  }
+
   function getNearestElevatorIndex(level) {
     var nearestElevatorIndex = 0
-    var minimalDistance = Math.abs(looper.state.elevators[nearestElevatorIndex].currentLevel - level)
+    var minimalDistance = Math.abs(looper.state.elevators[nearestElevatorIndex].currentLevel - level.id)
     for (var i = 0; i < looper.state.elevators.length; i++) {
-        if(Math.abs(looper.state.elevators[i].currentLevel - level) < minimalDistance) {
-            minimalDistance = Math.abs(looper.state.elevators[i].currentLevel - level)
+        if(Math.abs(looper.state.elevators[i].currentLevel - level.id) < minimalDistance) {
+            minimalDistance = Math.abs(looper.state.elevators[i].currentLevel - level.id)
             nearestElevatorIndex = i
         }
     }
@@ -34,14 +46,14 @@ var smartLogic = function(){
   logic.onElevatorUpRequested = function(level) {
     console.log("onElevatorUpRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
-    logic.model[seconds][level]++
+    logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
   logic.onElevatorDownRequested = function(level) {
     console.log("onElevatorDownRequested");
     seconds = getSecondsOfTheDay(looper.currentTimeStamp)
-    logic.model[seconds][level]++
+    logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
