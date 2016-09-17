@@ -11,7 +11,7 @@ function initialize() {
   var initialState = generateInitialState();
   console.log(initialState);
 
-  var logic = randomLogic;
+  var logic = smartLogic;
 
   looper.initialize(initialState, logic);
   looper.startLooping();
