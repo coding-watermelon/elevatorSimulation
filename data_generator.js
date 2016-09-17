@@ -24,21 +24,34 @@ var generator = function(){
     for(var i=0; i<count; i++){
       let person = {}
       person.id = i
+
       // Time represented as number of minutes after 0 o clock 
       // is number between 0 and 1440
-      // Starttime between 8 o clock and 10 o clock
-      person.workStartTime = startTimeDistribution()
-      
-      // Between 12 am and 2 pm
-      person.breakStartTime = stopTimeDistribution()
-      person.breakStopTime = person.breakStartTime + 45
+      if (Math.random() < 0.05) {
+        //Create an outlier
+        //Between 0 and 11 am
+        person.workStartTime = rand(0, 660)
 
-      // Between 8 and 10 hours after start
-      person.workStopTime = person.workStartTime + startTimeDistribution()
+        //Between 11 am and 3 pm
+        person.breakStartTime = rand(660, 900)
+        // Between 20 and 60 minutes
+        person.breakStopTime = Math.floor(Math.random() * 41) + 20;
 
+        // Between 7 and 11 hours after start
+        person.workStopTime = person.workStartTime + rand(420, 660)
+      } else {
+        // Between 8 o clock and 10 o clock
+        person.workStartTime = startTimeDistribution()
+        
+        // Between 12 am and 2 pm
+        person.breakStartTime = stopTimeDistribution()
+        person.breakStopTime = person.breakStartTime + 45
+
+        // Between 8 and 10 hours after start
+        person.workStopTime = person.workStartTime + startTimeDistribution()
+      }
       people.push(person)
     }
-
     return people
   }
 
