@@ -17,6 +17,10 @@ var looper = function(){
     looper.logic = logic;
   }
 
+  looper.setSpeedFactor = function(factor) {
+    looper.loopTimeStampDelta = looper.loopInterval * factor;
+  }
+
   looper.startLooping = function() {
     console.log("Starting looping");
     renderer.loopIntervalObject = window.setInterval(looper.loop, looper.loopInterval);
@@ -33,10 +37,6 @@ var looper = function(){
     looper.currentTimeStamp += looper.loopTimeStampDelta;
     looper.state.timestamp = looper.currentTimeStamp;
     renderer.setLatestState(looper.state);
-
-    if (looper.currentTimeStamp % 500000 == 0) {
-      console.log(new Date(looper.currentTimeStamp));
-    }
   }
 
   looper.processPeople = function() {
@@ -87,7 +87,7 @@ var looper = function(){
           level.resetUp();
           level.resetDown(); // TODO: remove only one!
 
-          console.log("Elevator " + elevator.id + " stopped at level " + level.id);
+          //console.log("Elevator " + elevator.id + " stopped at level " + level.id);
           
           // let people from level enter the elevator
           for (var personIndex = 0; personIndex < level.people.length; personIndex++) {
@@ -111,7 +111,7 @@ var looper = function(){
 
             // remove person from level
             level.removePerson(person);
-            console.log("Person " + person.id + " entered elevator " + elevator.id + " on level " + level.id + ", target: " + person.getTargetLevel());
+            //console.log("Person " + person.id + " entered elevator " + elevator.id + " on level " + level.id + ", target: " + person.getTargetLevel());
           }
 
           // let people exit the elevator
@@ -132,7 +132,7 @@ var looper = function(){
 
             // add person to level
             level.addPerson(person);
-            console.log("Person " + person.id + " exited elevator " + elevator.id + " on level " + level.id);
+            //console.log("Person " + person.id + " exited elevator " + elevator.id + " on level " + level.id);
           }
         }
       }

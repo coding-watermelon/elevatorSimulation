@@ -124,6 +124,7 @@ var renderer = function(){
     
     options.levelContentWidth = (options.levelsWidth - options.elevatorsWidth) / 2;
     options.peoplePerLevelRow = Math.floor(options.levelContentWidth / (options.peopleWidth + (3 * options.peopleMargin)));
+    options.maximumPeoplePerLevel = options.peoplePerLevelRow * 4;
 
     return options;
   }
@@ -195,6 +196,7 @@ var renderer = function(){
       ctx.textAlign = "center"; 
       ctx.fillStyle = renderer.elevatorColor;
       ctx.fillText(index + 1, elevatorStartX + (options.elevatorWidth / 2), elevatorStartY - 4);
+      ctx.lineWidth = 1;
 
       // people
       for (var peopleIndex = 0; peopleIndex < elevator.people.length; peopleIndex++) {
@@ -206,7 +208,8 @@ var renderer = function(){
         var peopleStartX = elevatorStartX + options.elevatorPadding + offsetX;
         var peopleStartY = elevatorEndY - options.elevatorMargin - options.elevatorPadding - offsetY;
 
-        ctx.lineWidth = 1;
+        ctx.fillStyle = renderer.primaryColorLight;
+        ctx.fillRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
         ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
       }
     }
@@ -249,23 +252,35 @@ var renderer = function(){
       ctx.stroke();
 
       // label
+      ctx.fillStyle = renderer.levelColor;
       ctx.font = "lighter 14px Arial";
       var levelName = getLevelName(index);
       ctx.fillText(levelName, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
 
       ctx.setLineDash([]);
+      ctx.lineWidth = 1;
 
       // people
       for (var peopleIndex = 0; peopleIndex < level.people.length; peopleIndex++) {
-        var rowIndex = peopleIndex % (options.peoplePerLevelRow - 1);
-        var collumnIndex = Math.floor(peopleIndex / (options.peoplePerLevelRow - 1));
+        if (peopleIndex >= options.maximumPeoplePerLevel) {
+          break;
+        }
+
+        var rowIndex = peopleIndex % (options.peoplePerLevelRow);
+        var collumnIndex = Math.floor(peopleIndex / (options.peoplePerLevelRow));
         var offsetX = rowIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
         var offsetY = collumnIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
         
         var peopleStartX = levelEndX - options.levelContentWidth + offsetX;
         var peopleStartY = levelEndY - (2 * options.elevatorMargin) - options.elevatorPadding - offsetY;
 
-        ctx.lineWidth = 1;
+        var person = state.people[level.people[peopleIndex]];
+        if (person.isWaitingForElevator) {
+          ctx.fillStyle = renderer.primaryColorLight;
+        } else {
+          ctx.fillStyle = renderer.primaryColorDark;
+        }
+        ctx.fillRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
         ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
       }
     }

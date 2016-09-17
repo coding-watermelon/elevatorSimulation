@@ -12,9 +12,11 @@ function initialize() {
   console.log(initialState);
 
   smartLogic.initialize(initialState);
-  var logic = smartLogic;
+
+  var logic = randomLogic;
 
   looper.initialize(initialState, logic);
+  looper.setSpeedFactor(getUrlParam("speedFactor", 20));
 
   looper.startLooping();
   renderer.startRenderingStates();
