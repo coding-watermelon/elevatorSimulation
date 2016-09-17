@@ -82,9 +82,6 @@ var looper = function(){
     for (var elevatorIndex = 0; elevatorIndex < looper.state.elevators.length; elevatorIndex++) {
       var elevator = looper.state.elevators[elevatorIndex];
 
-      // round current elevator level
-      //elevator.currentLevel = Math.round(elevator.currentLevel * 100) / 100;
-
       if (elevator.isAtLevel()) {
         if (elevator.shouldStop()) {
           elevator.stop();

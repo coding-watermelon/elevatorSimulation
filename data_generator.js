@@ -3,7 +3,7 @@
 var generator = function(){
   const MAX_NUMBER_OF_PEOPLE = 9;
   const WAIT_TIMEOUT = 5 * 1000;
-  const ELEVATOR_SPEED = (1 / 5) / 1000;
+  const ELEVATOR_SPEED = (1 / 4) / 1000;
   const BREAK_LEVEL = 0
 
   let generator = {}
@@ -221,7 +221,16 @@ var generator = function(){
       }
 
       elevator.moveUp = function(){
-        elevator.currentLevel += elevator.speed * looper.loopTimeStampDelta;
+        var change = elevator.speed * looper.loopTimeStampDelta;
+
+        var currentFloor = Math.floor(elevator.currentLevel);
+        var newFloor = Math.floor(elevator.currentLevel + change);
+
+        if (currentFloor < newFloor) {
+          elevator.currentLevel = newFloor;
+        } else {
+          elevator.currentLevel += change
+        }
       }
 
       elevator.shouldMoveDown = function() {
@@ -232,7 +241,16 @@ var generator = function(){
       }
 
       elevator.moveDown = function(){
-        elevator.currentLevel -= elevator.speed * looper.loopTimeStampDelta;
+        var change = elevator.speed * looper.loopTimeStampDelta;
+
+        var currentCeil = Math.ceil(elevator.currentLevel);
+        var newCeil = Math.ceil(elevator.currentLevel - change);
+
+        if (currentCeil < newCeil) {
+          elevator.currentLevel = newCeil;
+        } else {
+          elevator.currentLevel -= change;
+        }
         Math.max(elevator.currentLevel, 0);
       }
 
@@ -241,7 +259,7 @@ var generator = function(){
       }
 
       elevator.getLevel = function() {
-        var roundedCurrentLevel = Math.round(elevator.currentLevel * 100) / 100;
+        var roundedCurrentLevel = Math.round(elevator.currentLevel * 10) / 10;
         if (roundedCurrentLevel % 1 == 0) {
           return looper.state.levels[roundedCurrentLevel];
         }

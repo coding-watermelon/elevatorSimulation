@@ -16,7 +16,9 @@ function initialize() {
   var logic = smartLogic;
 
   looper.initialize(initialState, logic);
-  looper.setSpeedFactor(getUrlParam("speedFactor", 20));
+  var speedFactor = getUrlParam("speedFactor", 20);
+  looper.setSpeedFactor(speedFactor);
+  document.getElementById("slider").value = speedFactor;
 
   looper.startLooping();
   renderer.startRenderingStates();

@@ -97,7 +97,7 @@ var renderer = function(){
     var options = {};
 
     options.levelsHeight = Math.round(canvas.height * 0.9);
-    options.levelsWidth = Math.round(canvas.width * 0.5);
+    options.levelsWidth = Math.round(canvas.width * 0.75);
     options.levelHeight = Math.round(options.levelsHeight / state.levels.length);
 
     options.elevatorMargin = 10;
@@ -142,11 +142,15 @@ var renderer = function(){
 
     // time
     ctx.font="lighter 15px Arial";
-    ctx.textAlign = "left"; 
+    ctx.textAlign = "left";
     ctx.fillStyle = renderer.statsColor;
     var time = new Date(state.timestamp).toLocaleTimeString();
-    ctx.fillText(time, 20, 20);
+    ctx.fillText(time, canvas.width - 100, 30);
 
+    ctx.textAlign = "center";
+    var speed = Math.round(looper.loopTimeStampDelta / looper.loopInterval) + "x";
+    ctx.fillText(speed, 80, 30);
+    
     ctx.save();
   }
 
@@ -254,6 +258,7 @@ var renderer = function(){
 
       // label
       ctx.fillStyle = renderer.whiteOverlay;
+      ctx.textAlign = "left";
       ctx.font = "lighter 14px Arial";
       var levelName = getLevelName(index);
       ctx.fillText(levelName, levelEndX + 5, levelEndY + 4);
