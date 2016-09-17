@@ -43,6 +43,10 @@ var looper = function(){
     for (var personIndex = 0; personIndex < looper.state.people.length; personIndex++) {
       var person = looper.state.people[personIndex];
 
+      if (person.isInElevator) {
+        continue;
+      }
+
       // check if person needs to get to work
       if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
         //console.log("Person wants to get to work") //+ " - from " + person.currentLevel + " to " + person.workLevel);
@@ -82,6 +86,8 @@ var looper = function(){
           var level = elevator.getLevel();
           level.resetUp();
           level.resetDown(); // TODO: remove only one!
+
+          console.log("Elevator " + elevator.id + " stopped at level " + level.id);
           
           // let people from level enter the elevator
           for (var personIndex = 0; personIndex < level.people.length; personIndex++) {
@@ -98,6 +104,7 @@ var looper = function(){
             // remove person from level
             level.removePerson(person);
             console.log("Person " + person.id + " entered elevator " + elevator.id + " on level " + level.id + ", target: " + person.getTargetLevel());
+            console.log("People remaining at level " + level.id + ": " + level.people.length);
           }
 
           // let people exit the elevator
@@ -117,9 +124,8 @@ var looper = function(){
             // add person to level
             level.addPerson(person);
             console.log("Person " + person.id + " exited elevator " + elevator.id + " on level " + level.id);
+            console.log("People remaining in elevator " + elevator.id + ": " + elevator.people.length);
           }
-
-          continue;
         }
       }
 
