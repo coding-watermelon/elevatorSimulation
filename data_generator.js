@@ -2,8 +2,8 @@
 
 var generator = function(){
   const MAX_NUMBER_OF_PEOPLE = 9;
-  const WAIT_TIMEOUT = 10 * 1000;
-  const ELEVATOR_SPEED = (1 / 100) / 1000;
+  const WAIT_TIMEOUT = 5 * 1000;
+  const ELEVATOR_SPEED = (1 / 5) / 1000;
   const BREAK_LEVEL = 0
 
   let generator = {}

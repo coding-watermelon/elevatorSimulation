@@ -18,6 +18,7 @@ var renderer = function(){
 
   renderer.elevatorColor = "#FFFFFF";
   renderer.levelColor = "#FFFFFF";
+  renderer.statsColor = "#FFFFFF";
 
 
   renderer.initializeCanvas = function(canvas) {
@@ -121,6 +122,9 @@ var renderer = function(){
     options.peoplePerElevatorRow = Math.floor(options.elevatorContentWidth / (minimumPeopleWidth + (3 * options.peopleMargin)));
     options.peopleWidth = Math.round(options.elevatorContentWidth / options.peoplePerElevatorRow);
     
+    options.levelContentWidth = (options.levelsWidth - options.elevatorsWidth) / 2;
+    options.peoplePerLevelRow = Math.floor(options.levelContentWidth / (options.peopleWidth + (3 * options.peopleMargin)));
+
     return options;
   }
 
@@ -133,6 +137,14 @@ var renderer = function(){
     ctx.strokeStyle = renderer.primaryColor;
     ctx.lineWidth = 1;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // time
+    ctx.font="lighter 15px Arial";
+    ctx.textAlign = "left"; 
+    ctx.fillStyle = renderer.statsColor;
+    var time = new Date(state.timestamp).toLocaleTimeString();
+    ctx.fillText(time, 20, 20);
+
     ctx.save();
   }
 
@@ -240,6 +252,23 @@ var renderer = function(){
       ctx.font = "lighter 14px Arial";
       var levelName = getLevelName(index);
       ctx.fillText(levelName, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 7);
+
+
+      ctx.setLineDash([]);
+
+      // people
+      for (var peopleIndex = 0; peopleIndex < level.people.length; peopleIndex++) {
+        var rowIndex = peopleIndex % (options.peoplePerLevelRow - 1);
+        var collumnIndex = Math.floor(peopleIndex / (options.peoplePerLevelRow - 1));
+        var offsetX = rowIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
+        var offsetY = collumnIndex * (options.peopleWidth + (2 * options.peopleMargin)) + options.peopleMargin;
+        
+        var peopleStartX = levelEndX - options.levelContentWidth + offsetX;
+        var peopleStartY = levelEndY - (2 * options.elevatorMargin) - options.elevatorPadding - offsetY;
+
+        ctx.lineWidth = 1;
+        ctx.strokeRect(peopleStartX, peopleStartY, options.peopleWidth, options.peopleWidth);
+      }
     }
   }
 
