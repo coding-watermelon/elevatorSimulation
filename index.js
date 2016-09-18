@@ -12,8 +12,19 @@ function initialize() {
   console.log(initialState);
 
   smartLogic.initialize(initialState);
+  var logic;
 
-  var logic = smartLogic;
+  var requestedLogic = getUrlParam("logic", "smart");
+  if (requestedLogic == "random") {
+    logic = randomLogic;
+    console.log("Using random logic");
+  } else if (requestedLogic == "simple") {
+    logic = simpleLogic;
+    console.log("Using simple logic");
+  } else {
+    logic = smartLogic;
+    console.log("Using smart logic");
+  }
 
   looper.initialize(initialState, logic);
   var speedFactor = getUrlParam("speedFactor", 25);
