@@ -192,6 +192,42 @@ var generator = function(){
         }
       }
 
+      elevator.sortTargetLevels = function(model) {
+        var currentLevel = elevator.getLevel()
+        var nextLevel = elevator.targetLevels[0]
+        var goUpwards = null
+        if(nextLevel - currentLevel > 0) {
+          goUpwards = true
+        } else {
+          goUpwards = false
+        }
+        var nextLevelSet = []
+        var remainingLevels = []
+        for(var levelIndex = 0; levelIndex < elevator.targetLevels.length; levelIndex++) {
+          if(goUpwards) {
+            if(elevator.targetLevels[levelIndex] > currentLevel) {
+              nextLevelSet.push(elevator.targetLevels[levelIndex])
+            } else {
+              remainingLevels.push(elevator.targetLevels[levelIndex])
+            }
+          } else {
+            if(elevator.targetLevels[levelIndex] < currentLevel) {
+              nextLevelSet.push(elevator.targetLevels[levelIndex])
+            } else {
+              remainingLevels.push(elevator.targetLevels[levelIndex])
+            }
+          }
+        }
+
+        if(goUpwards) {
+          nextLevelSet.sort()
+          remainingLevels.sort().reverse()
+        } else {
+          nextLevelSet.sort().reverse()
+          remainingLevels.sort()
+        }
+      }
+
       elevator.removeTargetLevel = function(level){
         elevator.targetLevels = removeElementFromArray(level, elevator.targetLevels);
       }

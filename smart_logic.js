@@ -58,6 +58,7 @@ var smartLogic = function(){
     seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
+    looper.state.elevators[getNearestElevatorIndex(level)].sortTargetLevels(logic.model)
   }
 
   logic.onElevatorDownRequested = function(level) {
@@ -65,6 +66,7 @@ var smartLogic = function(){
     seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
+    looper.state.elevators[getNearestElevatorIndex(level)].sortTargetLevels(logic.model)
   }
 
   logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {
