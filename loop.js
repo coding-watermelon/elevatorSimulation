@@ -12,7 +12,7 @@ var looper = function(){
   looper.state;
   looper.logic;
   looper.waitingTimeSum = 0
-  looper.personsWaitedForElevator = []
+  looper.waitingPeopleCount = 0;
 
   looper.initialize = function(initialState, logic) {
     looper.state = initialState;
@@ -49,15 +49,14 @@ var looper = function(){
   }
 
   looper.getAverageWaitingTime = function() {
-    return looper.waitingTimeSum/looper.state.people.length;
+    return looper.waitingTimeSum / looper.waitingPeopleCount;
   }
 
   looper.processPeople = function() {
     for (var personIndex = 0; personIndex < looper.state.people.length; personIndex++) {
       var person = looper.state.people[personIndex];
 
-      if(person.isWaitingForElevator) {
-        looper.personsWaitedForElevator.push(person)
+      if (person.isWaitingForElevator) {
         person.waitingTime += looper.loopTimeStampDelta
         looper.waitingTimeSum += looper.loopTimeStampDelta
       }
@@ -68,7 +67,7 @@ var looper = function(){
 
       // check if person needs to get to work
       if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
-        //console.log("Person wants to get to work") //+ " - from " + person.currentLevel + " to " + person.workLevel);
+        console.log("Person " + person.id + " wants to get to work" + " - from " + person.currentLevel + " to " + person.workLevel);
         if (person.currentLevel > person.workLevel) {
           person.requestElevatorDown();
         } else if (person.currentLevel < person.workLevel) {
@@ -79,7 +78,7 @@ var looper = function(){
 
       // check if person needs to have a break
       if (person.shouldHaveABreak() && !person.isAtBreakLevel()) {
-        //console.log("Person wants to have a break");
+        console.log("Person " + person.id + " wants have a break" + " - from " + person.currentLevel + " to " + person.breakLevel);
         if (person.currentLevel > person.breakLevel) {
           person.requestElevatorDown();
         } else if (person.currentLevel < person.breakLevel) {
@@ -124,6 +123,7 @@ var looper = function(){
             // add person and person's target level to elevator
             elevator.addPerson(person);
             elevator.addTargetLevel(person.getTargetLevel());
+            looper.waitingPeopleCount += 1;
 
             // remove person from level
             level.removePerson(person);
