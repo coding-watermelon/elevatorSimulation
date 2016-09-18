@@ -142,10 +142,10 @@ var renderer = function(){
 
     // time
     ctx.font="lighter 15px Arial";
-    ctx.textAlign = "left";
+    ctx.textAlign = "right";
     ctx.fillStyle = renderer.statsColor;
     var time = new Date(state.timestamp).toLocaleTimeString();
-    ctx.fillText(time, canvas.width - 100, 30);
+    ctx.fillText(time, canvas.width - 30, 30);
 
     // speed
     ctx.textAlign = "center";
@@ -153,10 +153,10 @@ var renderer = function(){
     ctx.fillText(speed, 80, 30);
     
     // average waiting time
-    ctx.textAlign = "left";
+    ctx.textAlign = "right";
     var averageWaitingTime = looper.getAverageWaitingTime();
     var readableWaitingTime = (Math.round(averageWaitingTime / 100) / 10) + "s";
-    ctx.fillText(readableWaitingTime, canvas.width - 100, 60);
+    ctx.fillText(readableWaitingTime, canvas.width - 30, 60);
 
     ctx.save();
   }
