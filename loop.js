@@ -25,7 +25,7 @@ var looper = function(){
 
   looper.startLooping = function() {
     console.log("Starting looping");
-    renderer.loopIntervalObject = window.setInterval(looper.loop, looper.loopInterval);
+    looper.loopIntervalObject = window.setInterval(looper.loop, looper.loopInterval);
   }
 
   looper.stopLooping = function() {

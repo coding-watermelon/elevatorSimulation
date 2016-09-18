@@ -18,7 +18,13 @@ var generator = function(){
     }
 
     for (var personIndex = 0; personIndex < state.people.length; personIndex++) {
-      state.levels[0].people.push(state.people[personIndex].id);
+      var person = state.people[personIndex];
+      if (person.workStartTime < looper.currentTimeStamp) {
+        person.currentLevel = person.workLevel;
+        state.levels[person.workLevel].people.push(person.id);
+      } else {
+        state.levels[0].people.push(person.id);
+      }
     }
 
     return state;
