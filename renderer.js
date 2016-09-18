@@ -299,15 +299,20 @@ var renderer = function(){
       }
 
       // counts
-      ctx.fillStyle = renderer.whiteOverlay;
       ctx.font = "lighter 40px Arial";
       ctx.textAlign = "right";
-      var score = Math.round(smartLogic.getLevelScore(level.id) * 100) + "%";
-      var scoreWidth = ctx.measureText(score).width;
-      ctx.fillText(score, levelStartX + 97, levelStartY + (options.levelHeight / 2) + 10);
+      var score = smartLogic.getLevelScore(level.id, 30);
+      var opacity = Math.min(score, 0.7);
+      opacity = Math.max(opacity, 0.2);
+      ctx.fillStyle = "rgba(255, 255, 255, " + opacity + ")";
+
+      var readableScore = Math.round(smartLogic.getLevelScore(level.id, 30) * 100) + "%";
+      var scoreWidth = ctx.measureText(readableScore).width;
+      ctx.fillText(readableScore, levelStartX + 97, levelStartY + (options.levelHeight / 2) + 10);
 
       ctx.textAlign = "left";
       ctx.font = "lighter 14px Arial";
+      //ctx.fillStyle = renderer.whiteOverlay;
       ctx.fillText(waitingCount + " waiting", levelStartX + 105, levelStartY + (options.levelHeight / 2) - 9);
       ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 105, levelStartY + (options.levelHeight / 2) + 9);
     }
