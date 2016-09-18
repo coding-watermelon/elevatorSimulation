@@ -47,6 +47,10 @@ var looper = function(){
     renderer.setLatestState(looper.state);
   }
 
+  looper.averageWaitingTime = function() {
+    return looper.waitingTimeSum/looper.state.people.length;
+  }
+
   looper.processPeople = function() {
     for (var personIndex = 0; personIndex < looper.state.people.length; personIndex++) {
       var person = looper.state.people[personIndex];
