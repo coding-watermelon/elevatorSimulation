@@ -147,10 +147,17 @@ var renderer = function(){
     var time = new Date(state.timestamp).toLocaleTimeString();
     ctx.fillText(time, canvas.width - 100, 30);
 
+    // speed
     ctx.textAlign = "center";
     var speed = Math.round(looper.loopTimeStampDelta / looper.loopInterval) + "x speed";
     ctx.fillText(speed, 80, 30);
     
+    // average waiting time
+    ctx.textAlign = "left";
+    var averageWaitingTime = looper.getAverageWaitingTime();
+    var readableWaitingTime = (Math.round(averageWaitingTime / 100) / 10) + "s";
+    ctx.fillText(readableWaitingTime, canvas.width - 100, 60);
+
     ctx.save();
   }
 
