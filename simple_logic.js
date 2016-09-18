@@ -12,20 +12,19 @@ var simpleLogic = function(){
             nearestElevatorIndex = i
         }
     }
-    console.log('Nearest elevator for level ' + level + ' is elevator ' + nearestElevatorIndex)
     return nearestElevatorIndex
   }
 
   logic.onElevatorUpRequested = function(level) {
     //send closest unused elevator or elevator that will visit the level anyways
-    console.log("onElevatorUpRequested");
-    looper.state.elevators[getNearestElevatorIndex].addTargetLevel(level.id);
+    //console.log("onElevatorUpRequested");
+    looper.state.elevators[getNearestElevatorIndex()].addTargetLevel(level.id);
   }
 
   logic.onElevatorDownRequested = function(level) {
     //send closest unused elevator or elevator that will visit the level anyways
-    console.log("onElevatorDownRequested");
-    looper.state.elevators[getNearestElevatorIndex].addTargetLevel(level.id);
+    //console.log("onElevatorDownRequested");
+    looper.state.elevators[getNearestElevatorIndex()].addTargetLevel(level.id);
   }
 
   logic.onTargetLevelsChanged = function(currentState, elevator, targetLevels) {

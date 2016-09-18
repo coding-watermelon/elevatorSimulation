@@ -54,14 +54,14 @@ var smartLogic = function(){
   }
   
   logic.onElevatorUpRequested = function(level) {
-    console.log("onElevatorUpRequested");
+    //console.log("onElevatorUpRequested");
     seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
   }
 
   logic.onElevatorDownRequested = function(level) {
-    console.log("onElevatorDownRequested");
+    //console.log("onElevatorDownRequested");
     seconds = getMinutesOfTheDay(looper.currentTimeStamp)
     logic.model[seconds][level.id]++
     looper.state.elevators[getNearestElevatorIndex(level)].addTargetLevel(level.id);
@@ -73,7 +73,7 @@ var smartLogic = function(){
 
   logic.onElevatorIdle = function(elevator) {
     //move to most frequented level
-    console.log("onElevatorIdle");
+    //console.log("onElevatorIdle");
     currentSeconds = getMinutesOfTheDay(looper.currentTimeStamp)
     maxRequests = 0
     maxRequestsIndex = 0
