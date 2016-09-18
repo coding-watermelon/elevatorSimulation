@@ -301,13 +301,15 @@ var renderer = function(){
       // counts
       ctx.fillStyle = renderer.whiteOverlay;
       ctx.font = "lighter 40px Arial";
+      ctx.textAlign = "right";
       var score = Math.round(smartLogic.getLevelScore(level.id) * 100) + "%";
       var scoreWidth = ctx.measureText(score).width;
-      ctx.fillText(score, levelStartX + 7, levelStartY + (options.levelHeight / 2) + 10);
+      ctx.fillText(score, levelStartX + 97, levelStartY + (options.levelHeight / 2) + 10);
 
+      ctx.textAlign = "left";
       ctx.font = "lighter 14px Arial";
-      ctx.fillText(waitingCount + " waiting", levelStartX + 15 + scoreWidth, levelStartY + (options.levelHeight / 2) - 9);
-      ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 15 + scoreWidth, levelStartY + (options.levelHeight / 2) + 9);
+      ctx.fillText(waitingCount + " waiting", levelStartX + 105, levelStartY + (options.levelHeight / 2) - 9);
+      ctx.fillText(level.people.length - waitingCount + " total", levelStartX + 105, levelStartY + (options.levelHeight / 2) + 9);
     }
   }
 
