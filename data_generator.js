@@ -38,12 +38,12 @@ var generator = function(){
       if (generateOutlier) {
         person.workStartTime = gaussian(getMillisecondsFromTime(9), getMillisecondsFromTime(3))()
         person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(3), getMillisecondsFromTime(2))()
-        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.45)
+        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(1)
         person.workStopTime = person.breakStopTime + gaussian(getMillisecondsFromTime(4), getMillisecondsFromTime(3))()
       } else {
         person.workStartTime = startTimeDistribution()
         person.breakStartTime = breakTimeDistribution()
-        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(0.45)
+        person.breakStopTime = person.breakStartTime + getMillisecondsFromTime(1)
         person.workStopTime = person.workStartTime + getMillisecondsFromTime(9)
       }
       person.workLevel = workLevelDistribution();

@@ -67,7 +67,7 @@ var looper = function(){
 
       // check if person needs to get to work
       if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
-        //console.log("Person wants to get to work") //+ " - from " + person.currentLevel + " to " + person.workLevel);
+        console.log("Person " + person.id + " wants to get to work" + " - from " + person.currentLevel + " to " + person.workLevel);
         if (person.currentLevel > person.workLevel) {
           person.requestElevatorDown();
         } else if (person.currentLevel < person.workLevel) {
@@ -78,7 +78,7 @@ var looper = function(){
 
       // check if person needs to have a break
       if (person.shouldHaveABreak() && !person.isAtBreakLevel()) {
-        //console.log("Person wants to have a break");
+        console.log("Person " + person.id + " wants have a break" + " - from " + person.currentLevel + " to " + person.breakLevel);
         if (person.currentLevel > person.breakLevel) {
           person.requestElevatorDown();
         } else if (person.currentLevel < person.breakLevel) {
