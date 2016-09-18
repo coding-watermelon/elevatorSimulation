@@ -12,6 +12,7 @@ var looper = function(){
   looper.state;
   looper.logic;
   looper.waitingTimeSum = 0
+  looper.personsWaitedForElevator = []
 
   looper.initialize = function(initialState, logic) {
     looper.state = initialState;
@@ -56,6 +57,7 @@ var looper = function(){
       var person = looper.state.people[personIndex];
 
       if(person.isWaitingForElevator) {
+        looper.personsWaitedForElevator.push(person)
         person.waitingTime += looper.loopTimeStampDelta
         looper.waitingTimeSum += looper.loopTimeStampDelta
       }
