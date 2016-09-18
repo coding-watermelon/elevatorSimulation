@@ -48,8 +48,8 @@ var looper = function(){
     renderer.setLatestState(looper.state);
   }
 
-  looper.averageWaitingTime = function() {
-    return looper.waitingTimeSum/looper.personsWaitedForElevator.length;
+  looper.getAverageWaitingTime = function() {
+    return looper.waitingTimeSum/looper.state.people.length;
   }
 
   looper.processPeople = function() {
@@ -60,7 +60,6 @@ var looper = function(){
         looper.personsWaitedForElevator.push(person)
         person.waitingTime += looper.loopTimeStampDelta
         looper.waitingTimeSum += looper.loopTimeStampDelta
-        //console.log(looper.waitingTimeSum)
       }
 
       if (person.isInElevator) {
