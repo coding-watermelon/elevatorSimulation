@@ -18,20 +18,26 @@ var smartLogic = function(){
     logic.model = model
   }
 
-  logic.getLevelScore = function(level) {
-    var past = getMinutesOfTheDay(looper.currentTimeStamp) - 1
-    if(past < 0) {
-      past = 0;
+  logic.getLevelScore = function(level, pastMinutes) {
+    var requestSumOverall = 0;
+    var requestSumLevel = 0;
+    for(var pastMinute = 0; pastMinute < pastMinutes; pastMinute++) {
+      var past = getMinutesOfTheDay(looper.currentTimeStamp) - pastMinute
+      if(past < 0) {
+        past = 0;
+      }
+      var currentRequests = logic.model[past];
+      for(var levelIndex = 0; levelIndex < Object.keys(currentRequests).length; levelIndex++) {
+        requestSumOverall += currentRequests[levelIndex]
+        if(levelIndex == level) {
+          requestSumLevel += currentRequests[levelIndex]
+        }
+      }
     }
-    var currentRequests = logic.model[past];
-    var requestSum = 0;
-    for(var levelIndex = 0; levelIndex < Object.keys(currentRequests).length; levelIndex++) {
-      requestSum += currentRequests[levelIndex]
-    }
-    if(requestSum == 0) {
+    if(requestSumOverall == 0) {
       return 0;
     }
-    return currentRequests[level]/requestSum;
+    return requestSumLevel/requestSumOverall;
   }
 
   function getNearestElevatorIndex(level) {
