@@ -40,7 +40,7 @@ var generator = function(){
       let person = {}
       person.id = i
 
-      var generateOutlier = Math.random() < 0.25;
+      var generateOutlier = Math.random() < 0.1;
       if (generateOutlier) {
         person.workStartTime = gaussian(getMillisecondsFromTime(9), getMillisecondsFromTime(3))()
         person.breakStartTime = person.workStartTime + gaussian(getMillisecondsFromTime(3), getMillisecondsFromTime(2))()
