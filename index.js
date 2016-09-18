@@ -16,7 +16,7 @@ function initialize() {
   var logic = smartLogic;
 
   looper.initialize(initialState, logic);
-  var speedFactor = getUrlParam("speedFactor", 20);
+  var speedFactor = getUrlParam("speedFactor", 25);
   looper.setSpeedFactor(speedFactor);
   document.getElementById("slider").value = speedFactor;
 
@@ -27,7 +27,7 @@ function initialize() {
 // generates a state that will be used for
 // initializing the looper
 function generateInitialState() {
-  var peopleCount = getUrlParam("peopleCount", 20);
+  var peopleCount = getUrlParam("peopleCount", 100);
   var elevatorCount = getUrlParam("elevatorCount", 4);
   var levelCount = getUrlParam("levelCount", 6);
   var initialState = generator.initialize(peopleCount, elevatorCount, levelCount);  
