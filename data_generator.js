@@ -84,14 +84,16 @@ var generator = function(){
       }
 
       person.isAtBreakLevel = function() {
-        return person.currentLevel == BREAK_LEVEL;
+        return person.currentLevel == person.breakLevel;
       }
 
       person.getTargetLevel = function() {
         if (person.shouldBeAtWork() && person.currentLevel != person.workLevel) {
           return person.workLevel;
-        } else {
+        } else if (person.shouldHaveABreak() && person.currentLevel != person.breakLevel) {
           return person.breakLevel;
+        } else {
+          return person.currentLevel;
         }
       }
 
@@ -167,7 +169,7 @@ var generator = function(){
         maximumNumberOfPeople: MAX_NUMBER_OF_PEOPLE,
         people: [],
         currentLevel: 0,
-        targetLevels: [],
+        targetLevels: [0],
         speed: ELEVATOR_SPEED,
         waitTimeout: 0
       }

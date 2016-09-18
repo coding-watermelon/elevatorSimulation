@@ -34,17 +34,17 @@ var looper = function(){
   }
 
   looper.loop = function() {
-    looper.processPeople();
-    looper.processElevators();
+    looper.state.timestamp = looper.currentTimeStamp;
     looper.currentTimeStamp += looper.loopTimeStampDelta;
-    
     // reset timestamp
     var day = 24 * 60 * 60 * 1000;
     if (looper.currentTimeStam > day) {
       looper.currentTimeStamp = 0 + (looper.currentTimeStam - day);
     }
 
-    looper.state.timestamp = looper.currentTimeStamp;
+    looper.processPeople();
+    looper.processElevators();
+    
     renderer.setLatestState(looper.state);
   }
 
@@ -66,7 +66,7 @@ var looper = function(){
       }
 
       // check if person needs to get to work
-      if (person.shouldBeAtWork() && !person.isAtWorkLevel()) {
+      if (person.shouldBeAtWork() && !person.isAtWorkLevel() && !person.isWaitingForElevator) {
         console.log("Person " + person.id + " wants to get to work" + " - from " + person.currentLevel + " to " + person.workLevel);
         if (person.currentLevel > person.workLevel) {
           person.requestElevatorDown();
@@ -77,7 +77,7 @@ var looper = function(){
       }
 
       // check if person needs to have a break
-      if (person.shouldHaveABreak() && !person.isAtBreakLevel()) {
+      if (person.shouldHaveABreak() && !person.isAtBreakLevel() && !person.isWaitingForElevator) {
         console.log("Person " + person.id + " wants have a break" + " - from " + person.currentLevel + " to " + person.breakLevel);
         if (person.currentLevel > person.breakLevel) {
           person.requestElevatorDown();
